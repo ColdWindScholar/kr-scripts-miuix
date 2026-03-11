@@ -102,7 +102,7 @@ class CheckRootStatus(var context: Context, private var next: Runnable? = null) 
         private var rootStatus = false
         private fun checkPermission(context: Context, permission: String): Boolean = PermissionChecker.checkSelfPermission(context, permission) == PermissionChecker.PERMISSION_GRANTED
         fun grantPermission(context: Context) {
-            val cmds = StringBuilder()
+            val cmds = mutableListOf<String>()
             /*
             // 必需的权限
             val requiredPermission = arrayOf(
@@ -122,10 +122,10 @@ class CheckRootStatus(var context: Context, private var next: Runnable? = null) 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!checkPermission(context, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
-                    cmds.append("dumpsys deviceidle whitelist +${context.packageName};\n")
+                    cmds.add("dumpsys deviceidle whitelist +${context.packageName};\n")
                 }
             }
-            KeepShellPublic.doCmdSync(cmds.toString())
+            KeepShellPublic.doCmdSync(cmds.toList())
         }
 
         // 最后的ROOT检测结果
