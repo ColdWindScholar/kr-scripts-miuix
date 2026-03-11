@@ -1,7 +1,6 @@
 package com.omarea.shell.units
 
 import com.omarea.common.shell.KeepShellPublic
-import com.omarea.common.shell.RootFile
 import com.projectkr.shell.BatteryStatus
 
 /**
@@ -9,20 +8,6 @@ import com.projectkr.shell.BatteryStatus
  */
 
 class BatteryUnit {
-
-    //快充是否支持修改充电速度设置
-    fun qcSettingSuupport(): Boolean {
-        return RootFile.itemExists("/sys/class/power_supply/battery/constant_charge_current_max")
-    }
-
-    //快充是否支持电池保护
-    fun bpSettingSuupport(): Boolean {
-        return RootFile.itemExists("/sys/class/power_supply/battery/battery_charging_enabled") || RootFile.itemExists("/sys/class/power_supply/battery/input_suspend")
-    }
-
-    fun pdSupported(): Boolean {
-        return RootFile.fileExists("/sys/class/power_supply/usb/pd_allowed")
-    }
 
     /**
      * 获取电池温度
