@@ -118,10 +118,9 @@ class MainActivity : AppCompatActivity() {
                     TopAppBar(
                         title = getString(R.string.app_name),
                         actions = {
-                            if (binding.mainTabhostCpu.isVisible){
                             IconButton({}) { Icon(
                                 painter = painterResource(R.drawable.graph), null
-                            ) }}
+                            ) }
                             IconButton({})
                             { Icon(painter = painterResource(R.drawable.power), null) }
                             IconButton({})
