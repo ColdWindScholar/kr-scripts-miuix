@@ -9,31 +9,19 @@ import com.omarea.common.shared.RootFileInfo
 
 object RootFile {
     fun itemExists(path: String): Boolean {
-        return KeepShellPublic.doCmdSync("if [[ -e \"$path\" ]]; then echo 1; fi;").equals("1")
+        return KeepShellPublic.doCmdSync(listOf("if [[ -e \"$path\" ]]; then echo 1; fi;")) == "1"
     }
 
     fun fileExists(path: String): Boolean {
-        return KeepShellPublic.doCmdSync("if [[ -f \"$path\" ]]; then echo 1; fi;").equals("1")
+        return KeepShellPublic.doCmdSync(listOf("if [[ -f \"$path\" ]]; then echo 1; fi;")) == "1"
     }
 
     fun fileNotEmpty(path: String): Boolean {
-        return KeepShellPublic.doCmdSync("if [[ -f \"$path\" ]] && [[ -s \"$path\" ]]; then echo 1; fi;").equals("1")
+        return KeepShellPublic.doCmdSync(listOf("if [[ -f \"$path\" ]] && [[ -s \"$path\" ]]; then echo 1; fi;")) == "1"
     }
 
     fun dirExists(path: String): Boolean {
-        return KeepShellPublic.doCmdSync("if [[ -d \"$path\" ]]; then echo 1; fi;").equals("1")
-    }
-
-    fun deleteDirOrFile(path: String) {
-        KeepShellPublic.doCmdSync("rm -rf \"$path\"")
-    }
-
-    // 通过MD5比对两个文件是否相同
-    fun fileEquals(path1: String, path2: String): Boolean {
-        if (path1.equals(path2)) {
-            return true
-        }
-        return KeepShellPublic.doCmdSync("if [[ -f \"$path1\" ]] && [[ -f \"$path2\" ]]; then\nif [[ `md5sum -b \"$path1\"` = `md5sum -b \"$path2\"` ]]; then\n echo 1\nfi\nfi").equals("1")
+        return KeepShellPublic.doCmdSync(listOf("if [[ -d \"$path\" ]]; then echo 1; fi;")).equals("1")
     }
 
     // 处理像 "drwxrwx--x   3 root     root         4096 1970-07-14 17:13 vendor_de/" 这样的数据行
@@ -83,7 +71,7 @@ object RootFile {
         val absPath = if (path.endsWith("/")) path.subSequence(0, path.length - 1).toString() else path
         val files = ArrayList<RootFileInfo>()
         if (dirExists(absPath)) {
-            val outputInfo = KeepShellPublic.doCmdSync("busybox ls -1Fs \"$absPath\"")
+            val outputInfo = KeepShellPublic.doCmdSync(listOf("busybox ls -1Fs \"$absPath\""))
             Log.d(">>>> files", outputInfo)
             if (outputInfo != "error") {
                 val rows = outputInfo.split("\n")
@@ -92,7 +80,7 @@ object RootFile {
                     if (file != null) {
                         files.add(file)
                     } else {
-                        Log.e(">>>> Scene", "MapDirError Row -> " + row)
+                        Log.e(">>>> Scene", "MapDirError Row -> $row")
                     }
                 }
             }
@@ -105,7 +93,7 @@ object RootFile {
 
     fun fileInfo(path: String): RootFileInfo? {
         val absPath = if (path.endsWith("/")) path.subSequence(0, path.length - 1).toString() else path
-        val outputInfo = KeepShellPublic.doCmdSync("busybox ls -1dFs \"$absPath\"")
+        val outputInfo = KeepShellPublic.doCmdSync(listOf("busybox ls -1dFs \"$absPath\""))
         Log.d(">>>> file", outputInfo)
         if (outputInfo != "error") {
             val rows = outputInfo.split("\n")
@@ -116,7 +104,7 @@ object RootFile {
                     file.parentDir = absPath.substring(0, absPath.lastIndexOf("/"))
                     return file
                 } else {
-                    Log.e(">>>> Scene", "MapDirError Row -> " + row)
+                    Log.e(">>>> Scene", "MapDirError Row -> $row")
                 }
             }
         }
