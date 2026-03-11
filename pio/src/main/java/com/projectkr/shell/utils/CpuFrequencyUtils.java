@@ -7,6 +7,7 @@ import com.omarea.common.shell.KernelProrp;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class CpuFrequencyUtils {
@@ -22,7 +23,7 @@ public class CpuFrequencyUtils {
     }
 
     public static int getCurrentFrequency() {
-        String freqs = KeepShellPublic.INSTANCE.doCmdSync("cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq");
+        String freqs = KeepShellPublic.INSTANCE.doCmdSync(Collections.singletonList("cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq"));
         int max = 0;
         if (!freqs.equals("error")) {
             String[] freqArr = freqs.split("\n");

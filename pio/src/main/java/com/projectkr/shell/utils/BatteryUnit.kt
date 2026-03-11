@@ -217,40 +217,8 @@ class BatteryUnit {
         return RootFile.itemExists("/sys/class/power_supply/battery/battery_charging_enabled") || RootFile.itemExists("/sys/class/power_supply/battery/input_suspend")
     }
 
-    //修改充电速度限制
-    fun setChargeInputLimit(limit: Int) {
-        val cmd = "echo 0 > /sys/class/power_supply/battery/restricted_charging;" +
-                "echo 0 > /sys/class/power_supply/battery/safety_timer_enabled;" +
-                "chmod 755 /sys/class/power_supply/bms/temp_warm;" +
-                "echo 480 > /sys/class/power_supply/bms/temp_warm;" +
-                "chmod 755 /sys/class/power_supply/battery/constant_charge_current_max;" +
-                "echo 2000000 > /sys/class/power_supply/battery/constant_charge_current_max;" +
-                "echo 2500000 > /sys/class/power_supply/battery/constant_charge_current_max;" +
-                "echo 3000000 > /sys/class/power_supply/battery/constant_charge_current_max;" +
-                "echo 3500000 > /sys/class/power_supply/battery/constant_charge_current_max;" +
-                "echo 4000000 > /sys/class/power_supply/battery/constant_charge_current_max;" +
-                "echo 4500000 > /sys/class/power_supply/battery/constant_charge_current_max;" +
-                "echo 5000000 > /sys/class/power_supply/battery/constant_charge_current_max;" +
-                "echo " + limit + "000 > /sys/class/power_supply/battery/constant_charge_current_max;"
-
-        KeepShellPublic.doCmdSync(cmd)
-    }
-
     fun pdSupported(): Boolean {
         return RootFile.fileExists("/sys/class/power_supply/usb/pd_allowed")
-    }
-
-    fun pdAllowed(): Boolean {
-        return KernelProrp.getProp("/sys/class/power_supply/usb/pd_allowed") == "1"
-    }
-
-    fun setAllowed(boolean: Boolean): Boolean {
-        val builder = java.lang.StringBuilder()
-        builder.append("chmod 777 /sys/class/power_supply/usb/pd_allowed\n")
-        builder.append("echo ${if (boolean) "1" else "0"}> /sys/class/power_supply/usb/pd_allowed\n")
-        builder.append("chmod 777 /sys/class/power_supply/usb/pd_active\n")
-        builder.append("echo 1 > /sys/class/power_supply/usb/pd_active\n")
-        return KeepShellPublic.doCmdSync(builder.toString()) != "error"
     }
 
     fun pdActive(): Boolean {
@@ -261,7 +229,7 @@ class BatteryUnit {
      * 获取电池温度
      */
     fun getBatteryTemperature(): BatteryStatus {
-        val batteryInfo = KeepShellPublic.doCmdSync("dumpsys battery")
+        val batteryInfo = KeepShellPublic.doCmdSync(listOf("dumpsys battery"))
         val batteryInfos = batteryInfo.split("\n")
 
         // 由于部分手机相同名称的参数重复出现，并且值不同，为了避免这种情况，加个额外处理，同名参数只读一次
