@@ -1,6 +1,5 @@
 package com.projectkr.shell.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -11,8 +10,6 @@ import com.projectkr.shell.R
 import androidx.core.content.withStyledAttributes
 
 class CpuChartView : View {
-    //-------------必须给的数据相关-------------
-    private val str = arrayOf("已用", "可用")
     private var ratio = 0
     private var ratioState = 0
     //圆的直径
@@ -28,9 +25,7 @@ class CpuChartView : View {
     private var textPaint: Paint? = null
     //标注的画笔
     private var labelPaint: Paint? = null
-    //-------------颜色相关-------------
-    //边框颜色和标注颜色
-    private val mColor = intArrayOf(-0xec712a, 0x55888888, -0x1a8c8d, -0xb03c09, -0xe8a, -0x7e387c)
+
     // private int[] mColor = new int[]{0xFFF06292, 0xFF9575CD, 0xFFE57373, 0xFF4FC3F7, 0xFFFFF176, 0xFF81C784};
     //文字颜色
     private val textColor = -0x777778
@@ -42,13 +37,13 @@ class CpuChartView : View {
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        @SuppressLint("CustomViewStyleable") val array = context.obtainStyledAttributes(attrs, R.styleable.RamInfo)
-        val total = array.getInteger(R.styleable.RamInfo_total, 1)
-        val fee = array.getInteger(R.styleable.RamInfo_free, 1)
-        val feeRatio = (fee * 100.0 / total).toInt()
-        ratio = 100 - feeRatio
-        //strPercent = new int[]{100 - feeRatio, feeRatio};
-        array.recycle()
+        context.withStyledAttributes(attrs, R.styleable.RamInfo) {
+            val total = getInteger(R.styleable.RamInfo_total, 1)
+            val fee = getInteger(R.styleable.RamInfo_free, 1)
+            val feeRatio = (fee * 100.0 / total).toInt()
+            ratio = 100 - feeRatio
+            //strPercent = new int[]{100 - feeRatio, feeRatio};
+        }
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
@@ -130,7 +125,7 @@ class CpuChartView : View {
         }
         */
         cyclePaint!!.color = resources.getColor(R.color.colorAccent)
-        cyclePaint!!.alpha = (ratio * 255 / 100);
+        cyclePaint!!.alpha = (ratio * 255 / 100)
 
         if (ratio < 1 && (ratioState <= 2)) {
             return
