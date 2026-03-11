@@ -1,5 +1,6 @@
 package com.projectkr.shell
 
+import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.ActivityManager
@@ -15,6 +16,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -41,6 +43,7 @@ class ActionPage : AppCompatActivity() {
     private lateinit var currentPageConfig: PageNode
     private var autoRunItemId = ""
 
+    @RequiresPermission(anyOf = ["android.permission.READ_WALLPAPER_INTERNAL", Manifest.permission.MANAGE_EXTERNAL_STORAGE])
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -215,7 +218,7 @@ class ActionPage : AppCompatActivity() {
             }
 
             if (menuOption.type == "file" && menuOption.iconPath.isEmpty()) {
-                setImageDrawable(ContextCompat.getDrawable(context, com.omarea.krscript.R.drawable.kr_folder))
+                setImageDrawable(ContextCompat.getDrawable(context, R.drawable.kr_folder))
             } else if (menuOption.iconPath.isNotEmpty()) {
                 val icon = IconPathAnalysis().loadLogo(context, menuOption, false)
                 if (icon != null) {
