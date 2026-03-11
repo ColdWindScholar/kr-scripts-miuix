@@ -14,18 +14,18 @@ import java.util.concurrent.locks.ReentrantLock
 /**
  * Created by Hello on 2018/01/23.
  */
-public class KeepShell(private var rootMode: Boolean = true) {
+class KeepShell(private var rootMode: Boolean = true) {
     private var p: Process? = null
     private var out: OutputStream? = null
     private var reader: BufferedReader? = null
     private var currentIsIdle = true // 是否处于闲置状态
-    public val isIdle: Boolean
+    val isIdle: Boolean
         get() {
             return currentIsIdle
         }
 
     //尝试退出命令行程序
-    public fun tryExit() {
+    fun tryExit() {
         try {
             if (out != null)
                 out!!.close()
