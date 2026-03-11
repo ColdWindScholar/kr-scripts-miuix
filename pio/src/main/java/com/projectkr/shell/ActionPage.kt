@@ -319,7 +319,7 @@ class ActionPage : AppCompatActivity() {
 
     private fun chooseFilePath(fileSelectedInterface: ParamsFileChooserRender.FileSelectedInterface): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), 2);
+            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), 2)
             Toast.makeText(this, getString(R.string.kr_write_external_storage), Toast.LENGTH_LONG).show()
             return false
         } else {
@@ -331,7 +331,7 @@ class ActionPage : AppCompatActivity() {
                     if (!suffix.isNullOrEmpty()) {
                         chooseFilePath(suffix)
                     } else {
-                        val intent = Intent(Intent.ACTION_GET_CONTENT);
+                        val intent = Intent(Intent.ACTION_GET_CONTENT)
                         val mimeType = fileSelectedInterface.mimeType()
                         if (mimeType != null) {
                             intent.type = mimeType
@@ -339,11 +339,11 @@ class ActionPage : AppCompatActivity() {
                             intent.type = "*/*"
                         }
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        startActivityForResult(intent, ACTION_FILE_PATH_CHOOSER);
+                        startActivityForResult(intent, ACTION_FILE_PATH_CHOOSER)
                     }
                 }
                 this.fileSelectedInterface = fileSelectedInterface
-                true;
+                true
             } catch (ex: java.lang.Exception) {
                 false
             }
@@ -352,7 +352,7 @@ class ActionPage : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ACTION_FILE_PATH_CHOOSER) {
-            val result = if (data == null || resultCode != Activity.RESULT_OK) null else data.data
+            val result = if (data == null || resultCode != RESULT_OK) null else data.data
             if (fileSelectedInterface != null) {
                 if (result != null) {
                     val absPath = getPath(result)
@@ -363,7 +363,7 @@ class ActionPage : AppCompatActivity() {
             }
             this.fileSelectedInterface = null
         } else if (requestCode == ACTION_FILE_PATH_CHOOSER_INNER) {
-            val absPath = if (data == null || resultCode != Activity.RESULT_OK) null else data.getStringExtra("file")
+            val absPath = if (data == null || resultCode != RESULT_OK) null else data.getStringExtra("file")
             fileSelectedInterface?.onFileSelected(absPath)
             this.fileSelectedInterface = null
         }
@@ -424,7 +424,7 @@ class ActionPage : AppCompatActivity() {
                     ScriptEnvironmen.executeResultRoot(activity, afterRead, this)
                 }
 
-                if (items != null && items.size != 0) {
+                if (!items.isNullOrEmpty()) {
                     if (loadSuccess.isNotEmpty()) {
                         showDialog(getString(R.string.kr_page_load_success))
                         ScriptEnvironmen.executeResultRoot(activity, loadSuccess, this)
