@@ -444,7 +444,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ActivityFileSelector::class.java)
             intent.putExtra("extension", extension)
             startActivityForResult(intent, ACTION_FILE_PATH_CHOOSER_INNER)
-        } catch (ex: java.lang.Exception) {
+        } catch (_: java.lang.Exception) {
             Toast.makeText(this, "启动内置文件选择器失败！", Toast.LENGTH_SHORT).show()
         }
     }

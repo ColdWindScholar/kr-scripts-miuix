@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.RequiresPermission
 import androidx.core.content.PermissionChecker
 import com.omarea.common.ui.ThemeMode
 
@@ -18,6 +19,7 @@ object ThemeModeState {
     private var themeMode: ThemeMode = ThemeMode()
     private fun checkPermission(context: Context, permission: String): Boolean = PermissionChecker.checkSelfPermission(context, permission) == PermissionChecker.PERMISSION_GRANTED
 
+    @RequiresPermission(anyOf = ["android.permission.READ_WALLPAPER_INTERNAL", Manifest.permission.MANAGE_EXTERNAL_STORAGE])
     fun switchTheme(activity: Activity? = null): ThemeMode {
         if (activity != null) {
             val uiModeManager = activity.applicationContext.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
