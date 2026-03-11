@@ -45,7 +45,6 @@ import com.omarea.krscript.model.*
 import com.omarea.krscript.ui.ActionListFragment
 import com.omarea.krscript.ui.ParamsFileChooserRender
 import com.omarea.vtools.FloatMonitor
-import com.projectkr.shell.databinding.ActivityMainBinding
 import com.projectkr.shell.permissions.CheckRootStatus
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.NavigationBar
