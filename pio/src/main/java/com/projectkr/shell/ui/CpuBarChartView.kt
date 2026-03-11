@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.projectkr.shell.R
 import java.util.concurrent.LinkedBlockingQueue
+import androidx.core.content.withStyledAttributes
 
 class CpuChartBarView : View {
     private var mainPaint: Paint? = null
@@ -23,19 +24,19 @@ class CpuChartBarView : View {
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        @SuppressLint("CustomViewStyleable") val array = context.obtainStyledAttributes(attrs, R.styleable.RamInfo)
-        for (i in 0..4) {
-            loadHisotry.put(0)
+        context.withStyledAttributes(attrs, R.styleable.RamInfo) {
+            for (i in 0..4) {
+                loadHisotry.put(0)
+            }
         }
-        array.recycle()
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        @SuppressLint("CustomViewStyleable") val array = context.obtainStyledAttributes(attrs, R.styleable.RamInfo)
-        for (i in 0..5) {
-            loadHisotry.put(0)
+        context.withStyledAttributes(attrs, R.styleable.RamInfo) {
+            for (i in 0..5) {
+                loadHisotry.put(0)
+            }
         }
-        array.recycle()
     }
 
     /**

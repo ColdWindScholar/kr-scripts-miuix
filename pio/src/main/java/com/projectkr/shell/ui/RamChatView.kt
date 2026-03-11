@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import com.projectkr.shell.R
+import androidx.core.content.withStyledAttributes
 
 class RamChatView : View {
     //-------------必须给的数据相关-------------
@@ -38,13 +39,13 @@ class RamChatView : View {
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        @SuppressLint("CustomViewStyleable") val array = context.obtainStyledAttributes(attrs, R.styleable.RamInfo)
-        val total = array.getInteger(R.styleable.RamInfo_total, 1)
-        val fee = array.getInteger(R.styleable.RamInfo_free, 1)
-        val feeRatio = (fee * 100.0 / total).toInt()
-        ratio = 100 - feeRatio
-        //strPercent = new int[]{100 - feeRatio, feeRatio};
-        array.recycle()
+        context.withStyledAttributes(attrs, R.styleable.RamInfo) {
+            val total = getInteger(R.styleable.RamInfo_total, 1)
+            val fee = getInteger(R.styleable.RamInfo_free, 1)
+            val feeRatio = (fee * 100.0 / total).toInt()
+            ratio = 100 - feeRatio
+            //strPercent = new int[]{100 - feeRatio, feeRatio};
+        }
     }
 
     /**

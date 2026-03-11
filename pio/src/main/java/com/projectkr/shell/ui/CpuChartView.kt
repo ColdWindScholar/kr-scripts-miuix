@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import com.projectkr.shell.R
+import androidx.core.content.withStyledAttributes
 
 class CpuChartView : View {
     //-------------必须给的数据相关-------------
@@ -51,13 +52,13 @@ class CpuChartView : View {
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        @SuppressLint("CustomViewStyleable") val array = context.obtainStyledAttributes(attrs, R.styleable.RamInfo)
-        val total = array.getInteger(R.styleable.RamInfo_total, 1)
-        val fee = array.getInteger(R.styleable.RamInfo_free, 1)
-        val feeRatio = (fee * 100.0 / total).toInt()
-        ratio = feeRatio
-        //strPercent = new int[]{100 - feeRatio, feeRatio};
-        array.recycle()
+        context.withStyledAttributes(attrs, R.styleable.RamInfo) {
+            val total = getInteger(R.styleable.RamInfo_total, 1)
+            val fee = getInteger(R.styleable.RamInfo_free, 1)
+            val feeRatio = (fee * 100.0 / total).toInt()
+            ratio = feeRatio
+            //strPercent = new int[]{100 - feeRatio, feeRatio};
+        }
     }
 
     /**
@@ -90,16 +91,6 @@ class CpuChartView : View {
         initPaint()
         //画圆环
         drawCycle(canvas)
-    }
-
-    fun setData(total: Float, fee: Float) {
-        if (fee == total && total == 0F) {
-            ratio = 0
-        } else {
-            val feeRatio = (fee * 100.0 / total).toInt()
-            ratio = 100 - feeRatio
-        }
-        invalidate()
     }
 
     /**

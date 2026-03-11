@@ -500,10 +500,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getPath(uri: Uri): String? {
-        try {
-            return FilePathResolver().getPath(this, uri)
+        return try {
+            FilePathResolver().getPath(this, uri)
         } catch (ex: Exception) {
-            return null
+            null
         }
     }
 

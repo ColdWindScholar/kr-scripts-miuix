@@ -21,6 +21,7 @@ import com.projectkr.shell.utils.CpuFrequencyUtils
 import com.projectkr.shell.utils.CpuLoadUtils
 import com.projectkr.shell.utils.GpuUtils
 import java.util.*
+import kotlin.math.abs
 
 class FloatMonitor(context: Context) {
     private var mContext: Context? = context
@@ -119,7 +120,7 @@ class FloatMonitor(context: Context) {
                         }
                         MotionEvent.ACTION_UP -> {
                             if (System.currentTimeMillis() - touchStartTime < 300) {
-                                if (Math.abs(event.rawX - touchStartRawX) < 15 && Math.abs(event.rawY - touchStartRawY) < 15) {
+                                if (abs(event.rawX - touchStartRawX) < 15 && abs(event.rawY - touchStartRawY) < 15) {
                                     onClick()
                                 }
                             }
@@ -149,12 +150,10 @@ class FloatMonitor(context: Context) {
         if (freq == null) {
             return ""
         }
-        if (freq.length > 3) {
-            return freq.substring(0, freq.length - 3)
-        } else if (freq.isEmpty()) {
-            return "0"
-        } else {
-            return freq
+        return if (freq.length > 3) {
+            freq.substring(0, freq.length - 3)
+        } else freq.ifEmpty {
+            "0"
         }
     }
 

@@ -6,12 +6,10 @@ import com.omarea.common.shell.KeepShellPublic;
 import com.omarea.common.shell.KernelProrp;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 public class CpuFrequencyUtils {
-    private static ArrayList<String[]> cpuClusterInfo;
     private static String lastCpuState = "";
 
     public static String getCurrentMaxFrequency(String core) {
@@ -162,11 +160,4 @@ public class CpuFrequencyUtils {
         }
     }
 
-    public static ArrayList<String[]> getCpuClusterInfo() {
-        return cpuClusterInfo;
-    }
-
-    public static void setCpuClusterInfo(ArrayList<String[]> cpuClusterInfo) {
-        CpuFrequencyUtils.cpuClusterInfo = cpuClusterInfo;
-    }
 }
