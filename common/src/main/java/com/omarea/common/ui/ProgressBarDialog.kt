@@ -53,12 +53,12 @@ open class ProgressBarDialog(private var context: Activity, private var uniqueId
     }
 
     @SuppressLint("InflateParams")
-    public fun execShell(cmd: String, handler: Handler? = null) {
+    fun execShell(cmd: String, handler: Handler? = null) {
         hideDialog()
 
         val layoutInflater = LayoutInflater.from(context)
         val dialog = layoutInflater.inflate(R.layout.dialog_loading, null)
-        val textView = (dialog.findViewById(R.id.dialog_text) as TextView)
+        val textView: TextView = (dialog.findViewById(R.id.dialog_text))
         textView.text = context.getString(R.string.execute_wait)
         alert = DialogHelper.customDialog(context, dialog, false)
         // AlertDialog.Builder(context).setView(dialog).setCancelable(false).create()

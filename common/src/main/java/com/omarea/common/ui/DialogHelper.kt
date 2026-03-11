@@ -7,68 +7,69 @@ import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.graphics.drawable.toDrawable
 import com.omarea.common.R
 
 class DialogHelper {
-    class DialogButton(public val text: String, public val onClick: Runnable? = null, public val dismiss: Boolean = true) {
-    }
+    class DialogButton(val text: String, val onClick: Runnable? = null, val dismiss: Boolean = true)
 
     class DialogWrap(private val d: AlertDialog) {
-        public val context = dialog.context
+        val context = dialog.context
         private var mCancelable = true
-        public val isCancelable: Boolean
+        val isCancelable: Boolean
             get () {
                 return mCancelable
             }
 
-        public fun setCancelable(cancelable: Boolean): DialogWrap {
+        fun setCancelable(cancelable: Boolean): DialogWrap {
             mCancelable = cancelable
             d.setCancelable(cancelable)
 
             return this
         }
 
-        public fun setOnDismissListener(onDismissListener: DialogInterface.OnDismissListener): DialogWrap {
+        fun setOnDismissListener(onDismissListener: DialogInterface.OnDismissListener): DialogWrap {
             d.setOnDismissListener(onDismissListener)
 
             return this
         }
 
-        public val dialog: AlertDialog
+        val dialog: AlertDialog
             get() {
                 return d
             }
 
-        public fun dismiss() {
+        fun dismiss() {
             try {
                 d.dismiss()
             } catch (ex: Exception) {
             }
         }
 
-        public fun hide() {
+        fun hide() {
             try {
                 d.hide()
             } catch (ex: Exception) {
             }
         }
 
-        public val isShowing: Boolean
+        val isShowing: Boolean
             get() {
-                return d.isShowing()
+                return d.isShowing
             }
     }
 
     companion object {
         // 是否禁用模糊背景
-        public var disableBlurBg = false
+        var disableBlurBg = false
 
         fun animDialog(dialog: AlertDialog?): DialogWrap? {
             if (dialog != null && !dialog.isShowing) {
@@ -94,7 +95,7 @@ class DialogHelper {
             val layoutInflater = LayoutInflater.from(context)
             val dialog = layoutInflater.inflate(R.layout.dialog_help_info, null)
 
-            (dialog.findViewById(R.id.confirm_title) as TextView).run {
+            (dialog.findViewById<TextView>(R.id.confirm_title)!!).run {
                 if (title.isNotEmpty()) {
                     text = title
                     visibility = View.VISIBLE
@@ -103,7 +104,7 @@ class DialogHelper {
                 }
             }
 
-            (dialog.findViewById(R.id.confirm_message) as TextView).run {
+            (dialog.findViewById<TextView>(R.id.confirm_message)!!).run {
                 if (message.isNotEmpty()) {
                     text = message
                     visibility = View.VISIBLE
@@ -113,7 +114,7 @@ class DialogHelper {
             }
 
             val d = customDialog(context, dialog, onDismiss == null)
-            (dialog.findViewById(R.id.btn_confirm) as View).run {
+            (dialog.findViewById<View>(R.id.btn_confirm)!!).run {
                 if (onDismiss != null) {
                     d.setOnDismissListener {
                         onDismiss.run()
@@ -170,7 +171,7 @@ class DialogHelper {
                 if (title.isEmpty()) {
                     visibility = View.GONE
                 } else {
-                    setText(title)
+                    text = title
                 }
             }
 
@@ -178,7 +179,7 @@ class DialogHelper {
                 if (message.isEmpty()) {
                     visibility = View.GONE
                 } else {
-                    setText(message)
+                    text = message
                 }
             }
 
@@ -415,17 +416,20 @@ class DialogHelper {
         }
 
         private fun isNightMode(context: Context): Boolean {
-            val nightMode = AppCompatDelegate.getDefaultNightMode()
-            if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-                return true
-            } else if (
-                    nightMode == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM ||
-                    nightMode == AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
-            ) {
-                val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
-                return uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES
-            } else {
-                return false
+            when (AppCompatDelegate.getDefaultNightMode()) {
+                AppCompatDelegate.MODE_NIGHT_YES -> {
+                    return true
+                }
+
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
+                    -> {
+                    val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+                    return uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES
+                }
+
+                else -> {
+                    return false
+                }
             }
         }
 
@@ -450,7 +454,7 @@ class DialogHelper {
 
                 // window.setDimAmount(0f)
                 if (blurBitmap != null) {
-                    setBackgroundDrawable(BitmapDrawable(activity.resources, blurBitmap))
+                    setBackgroundDrawable(blurBitmap.toDrawable(activity.resources))
                 } else {
                     // setBackgroundDrawableResource(android.R.color.transparent)
                     try {
@@ -458,26 +462,26 @@ class DialogHelper {
                         if (bg == Color.TRANSPARENT) {
 
                             if (isFloating) {
-                                val d = ColorDrawable(bg)
+                                val d = bg.toDrawable()
                                 setBackgroundDrawable(d)
                                 setDimAmount(0.9f)
                                 return
                             } else {
                                 if (wallpaperMode || isNightMode(context)) {
-                                    val d = ColorDrawable(Color.argb(255, 18, 18, 18))
+                                    val d = Color.argb(255, 18, 18, 18).toDrawable()
                                     setBackgroundDrawable(d)
                                 } else {
-                                    val d = ColorDrawable(Color.argb(255, 245, 245, 245))
+                                    val d = Color.argb(255, 245, 245, 245).toDrawable()
                                     setBackgroundDrawable(d)
                                 }
                             }
 
                         } else {
-                            val d = ColorDrawable(bg)
+                            val d = bg.toDrawable()
                             setBackgroundDrawable(d)
                         }
                     } catch (ex: java.lang.Exception) {
-                        val d = ColorDrawable(Color.argb(255, 245, 245, 245))
+                        val d = Color.argb(255, 245, 245, 245).toDrawable()
                         setBackgroundDrawable(d)
                     }
                 }

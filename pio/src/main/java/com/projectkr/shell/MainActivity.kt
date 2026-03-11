@@ -467,11 +467,11 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         intent.type = "*/*"
                     }
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    startActivityForResult(intent, ACTION_FILE_PATH_CHOOSER);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                    startActivityForResult(intent, ACTION_FILE_PATH_CHOOSER)
                 }
                 this.fileSelectedInterface = fileSelectedInterface
-                true;
+                true
             } catch (ex: java.lang.Exception) {
                 false
             }
