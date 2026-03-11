@@ -118,12 +118,12 @@ class MainActivity : AppCompatActivity() {
                     TopAppBar(
                         title = getString(R.string.app_name),
                         actions = {
-                            IconButton({}) { Icon(
+                            IconButton({onOptionsItemSelected(MenuItems.Graph.ordinal)}) { Icon(
                                 painter = painterResource(R.drawable.graph), null
                             ) }
-                            IconButton({})
+                            IconButton({onOptionsItemSelected(MenuItems.Reboot.ordinal)})
                             { Icon(painter = painterResource(R.drawable.power), null) }
-                            IconButton({})
+                            IconButton({onOptionsItemSelected(MenuItems.Info.ordinal)})
                             { Icon(painter = painterResource(R.drawable.info), null) }
 
                         })
