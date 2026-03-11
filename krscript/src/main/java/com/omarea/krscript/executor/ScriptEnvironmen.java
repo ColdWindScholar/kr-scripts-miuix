@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class ScriptEnvironmen {
@@ -215,10 +216,10 @@ public class ScriptEnvironmen {
         stringBuilder.append(environmentPath + " \"" + path + "\"");
         if (shellTranslation != null) {
             return shellTranslation.resolveRow(
-                privateShell.doCmdSync(stringBuilder.toString())
+                privateShell.doCmdSync(Collections.singletonList(stringBuilder.toString()))
             );
         } else {
-            return privateShell.doCmdSync(stringBuilder.toString());
+            return privateShell.doCmdSync(Collections.singletonList(stringBuilder.toString()));
         }
     }
 
