@@ -87,15 +87,15 @@ class MainActivity : AppCompatActivity() {
                 progressBarDialog.hideDialog()
             }
             val items = listOf(
-                if (CheckRootStatus.lastCheckResult && krScriptConfig.allowHomePage) NavigationItem(
+                NavigationItem(
                     label = getString(R.string.tab_home),
-                    icon = MiuixIcons.MapAlbum) else null,
-                if (!favorites.isNullOrEmpty()) NavigationItem(label = getString(R.string.tab_favorites), icon = MiuixIcons.Favorites) else null,
-                if (!pages.isNullOrEmpty()) NavigationItem(label = getString(R.string.tab_pages), icon = MiuixIcons.More) else null
+                    icon = MiuixIcons.MapAlbum),
+                NavigationItem(label = getString(R.string.tab_favorites), icon = MiuixIcons.Favorites),
+                NavigationItem(label = getString(R.string.tab_pages), icon = MiuixIcons.More)
             )
             val pagerState = rememberPagerState(
                 initialPage = 0,
-                pageCount = { items.filterNotNull().size }
+                pageCount = { items.size }
             )
             val coroutineScope = rememberCoroutineScope()
 
@@ -114,7 +114,6 @@ class MainActivity : AppCompatActivity() {
                         mode = NavigationDisplayMode.IconAndText,
                         content = {
                             items.forEachIndexed { index, item ->
-                                if (item != null) {
                                 NavigationBarItem(
                                     icon = item.icon,
                                     label = item.label,
@@ -125,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                                         }
                                     }
                                 )
-                                }
                             }
                         })
                 }
