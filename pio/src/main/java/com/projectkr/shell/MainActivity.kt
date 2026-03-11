@@ -104,7 +104,6 @@ fun PowerItem(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 65.dp)
-            .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp)) // 对应卡片样式
             .clickable { onClick() }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
