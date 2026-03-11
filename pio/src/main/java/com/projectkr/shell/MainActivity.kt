@@ -2,7 +2,6 @@ package com.projectkr.shell
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -27,7 +26,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,7 +33,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -53,7 +50,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,13 +62,16 @@ import com.omarea.common.ui.DialogHelper
 import com.omarea.common.ui.ProgressBarDialog
 import com.omarea.krscript.config.PageConfigReader
 import com.omarea.krscript.config.PageConfigSh
-import com.omarea.krscript.model.*
+import com.omarea.krscript.model.ClickableNode
+import com.omarea.krscript.model.KrScriptActionHandler
+import com.omarea.krscript.model.NodeInfoBase
+import com.omarea.krscript.model.PageNode
+import com.omarea.krscript.model.RunnableNode
 import com.omarea.krscript.ui.ActionListFragment
 import com.omarea.krscript.ui.ParamsFileChooserRender
 import com.omarea.vtools.FloatMonitor
 import com.projectkr.shell.permissions.CheckRootStatus
 import kotlinx.coroutines.launch
-import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import top.yukonga.miuix.kmp.basic.NavigationDisplayMode
@@ -85,7 +84,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Favorites
 import top.yukonga.miuix.kmp.icon.extended.MapAlbum
 import top.yukonga.miuix.kmp.icon.extended.More
-import top.yukonga.miuix.kmp.theme.TextStyles
 
 enum class MainTab {
     Home, Favourites, Pages
@@ -106,7 +104,7 @@ fun PowerItem(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 65.dp)
-            .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp)) // 对应卡片样式
+            .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp)) // 对应卡片样式
             .clickable { onClick() }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -115,7 +113,7 @@ fun PowerItem(
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .background(iconBgColor, CircleShape)
+                .background(iconBgColor, androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
                 .alpha(0.8f),
             contentAlignment = Alignment.Center
         ) {
