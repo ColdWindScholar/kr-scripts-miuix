@@ -69,7 +69,7 @@ class KeepShell(private var rootMode: Boolean = true) {
 
     fun checkRoot(): Boolean {
         val r = doCmdSync(checkRootState).lowercase(Locale.getDefault())
-        return if (r == "error" || r.contains("permission denied") || r.contains("not allowed") || r.equals("not found")) {
+        return if (r == "error" || r.contains("permission denied") || r.contains("not allowed") || r == "not found") {
             if (rootMode) {
                 tryExit()
             }
