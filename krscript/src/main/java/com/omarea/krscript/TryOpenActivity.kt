@@ -34,7 +34,7 @@ class TryOpenActivity(private val context:  Context, private val activity:String
                 val success = if (activity.contains("/")) {
                     KeepShellPublic.doCmdSync(listOf("am start-activity -W -n $activity")).contains("ok")
                 } else {
-                    KeepShellPublic.doCmdSync(listOf("am start-activity -W -a " + activity)).contains("ok")
+                    KeepShellPublic.doCmdSync(listOf("am start-activity -W -a $activity")).contains("ok")
                 }
                 if (success) {
                     return true
