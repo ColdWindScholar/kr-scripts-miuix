@@ -319,14 +319,20 @@ class MainActivity : AppCompatActivity() {
                         title = "Recovery",
                         desc = "重启到Recovery模式（俗称卡刷模式）",
                         iconRes = R.drawable.power_recovery,
-                        iconBgColor = Color(0xFF787878)
+                        iconBgColor = Color(0XC8787878)
                     ) { /* 执行 Recovery */ }
 
                     PowerItem(
                         title = "Fastboot",
                         desc = "重启到引导模式（俗称线刷模式）",
                         iconRes = R.drawable.power_fastboot,
-                        iconBgColor = Color(0xFFFF9800)
+                        iconBgColor = Color(0XC8787878)
+                    ) { /* 执行 Fastboot */ }
+                    PowerItem(
+                        title = "9008(EDL)",
+                        desc = "重启到9008模式，*此模式仅限部分骁龙设备可用",
+                        iconRes = R.drawable.power_emergency,
+                        iconBgColor = Color(0XC8787878)
                     ) { /* 执行 Fastboot */ }
                 }
             }
