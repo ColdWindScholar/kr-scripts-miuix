@@ -40,44 +40,8 @@ public class CpuFrequencyUtils {
         return max;
     }
 
-    public static String getCurrentMinFrequency(Integer cluster) {
-        if (cluster >= getClusterInfo().size()) {
-            return "";
-        }
-        String cpu = "cpu" + getClusterInfo().get(cluster)[0];
-        return KernelProrp.INSTANCE.getProp(Constants.scaling_min_freq.replace("cpu0", cpu));
-    }
-
     public static String getCurrentMinFrequency(String core) {
         return KernelProrp.INSTANCE.getProp(Constants.scaling_min_freq.replace("cpu0", core));
-    }
-
-    public static String[] getAvailableGovernors(Integer cluster) {
-        if (cluster >= getClusterInfo().size()) {
-            return new String[]{};
-        }
-        String cpu = "cpu" + getClusterInfo().get(cluster)[0];
-        return KernelProrp.INSTANCE.getProp(Constants.scaling_available_governors.replace("cpu0", cpu)).split(" ");
-    }
-
-    public static String getCurrentScalingGovernor(Integer cluster) {
-        if (cluster >= getClusterInfo().size()) {
-            return "";
-        }
-        String cpu = "cpu" + getClusterInfo().get(cluster)[0];
-        return KernelProrp.INSTANCE.getProp(Constants.scaling_governor.replace("cpu0", cpu));
-    }
-
-    public static String getCurrentScalingGovernor(String core) {
-        return KernelProrp.INSTANCE.getProp(Constants.scaling_governor.replace("cpu0", core));
-    }
-
-    public static String getInputBoosterTime() {
-        return KernelProrp.INSTANCE.getProp("/sys/module/cpu_boost/parameters/input_boost_ms");
-    }
-
-    public static boolean getCoreOnlineState(int coreIndex) {
-        return KernelProrp.INSTANCE.getProp("/sys/devices/system/cpu/cpu0/online".replace("cpu0", "cpu" + coreIndex)).equals("1");
     }
 
     public static int getCoreCount() {
@@ -92,102 +56,9 @@ public class CpuFrequencyUtils {
         }
     }
 
-    public static ArrayList<String[]> getClusterInfo() {
-        if (cpuClusterInfo != null) {
-            return cpuClusterInfo;
-        }
-
-        int cores = 0;
-        cpuClusterInfo = new ArrayList<>();
-        ArrayList<String> clusters = new ArrayList<>();
-        while (true) {
-            File file = new File("/sys/devices/system/cpu/cpu0/cpufreq/related_cpus".replace("cpu0", "cpu" + cores));
-            if (file.exists()) {
-                String relatedCpus = KernelProrp.INSTANCE.getProp("/sys/devices/system/cpu/cpu0/cpufreq/related_cpus".replace("cpu0", "cpu" + cores)).trim();
-                if (!clusters.contains(relatedCpus) && !relatedCpus.isEmpty()) {
-                    clusters.add(relatedCpus);
-                }
-            } else {
-                break;
-            }
-            cores++;
-        }
-        for (int i = 0; i < clusters.size(); i++) {
-            cpuClusterInfo.add(clusters.get(i).split(" "));
-        }
-
-        return cpuClusterInfo;
-    }
-
-    public static String[] toMhz(String... values) {
-        String[] frequency = new String[values.length];
-
-        for (int i = 0; i < values.length; i++) {
-            try {
-                frequency[i] = (Integer.parseInt(values[i].trim()) / 1000) + " Mhz";
-            } catch (NumberFormatException nfe) {
-                nfe.printStackTrace();
-            }
-        }
-        return frequency;
-    }
-
-    // /sys/devices/system/cpu/cpuhotplug
-    public static boolean exynosCpuhotplugSupport() {
-        return new File("/sys/devices/system/cpu/cpuhotplug").exists();
-    }
-
-    public static boolean exynosHMP() {
-        return new File("/sys/kernel/hmp/down_threshold").exists() && new File("/sys/kernel/hmp/up_threshold").exists() && new File("/sys/kernel/hmp/boost").exists();
-    }
-
-    public static String[] adrenoGPUFreqs() {
-        String freqs = KernelProrp.INSTANCE.getProp("/sys/class/kgsl/kgsl-3d0/devfreq/available_frequencies");
-        return freqs.split(" ");
-    }
-
-    public static boolean isAdrenoGPU() {
-        return new File("/sys/class/kgsl/kgsl-3d0").exists();
-    }
-
-    public static String[] getAdrenoGPUGovernors() {
-        String g = KernelProrp.INSTANCE.getProp("/sys/class/kgsl/kgsl-3d0/devfreq/available_governors");
-        return g.split(" ");
-    }
-
-    public static String getAdrenoGPUMinFreq() {
-        return KernelProrp.INSTANCE.getProp("/sys/class/kgsl/kgsl-3d0/devfreq/min_freq");
-    }
-
-    public static String getAdrenoGPUMinPowerLevel() {
-        return KernelProrp.INSTANCE.getProp("/sys/class/kgsl/kgsl-3d0/min_pwrlevel");
-    }
-
-
-    public static String getAdrenoGPUMaxPowerLevel() {
-        return KernelProrp.INSTANCE.getProp("/sys/class/kgsl/kgsl-3d0/max_pwrlevel");
-    }
-
-    public static String getAdrenoGPUDefaultPowerLevel() {
-        return KernelProrp.INSTANCE.getProp("/sys/class/kgsl/kgsl-3d0/default_pwrlevel");
-    }
-
-    public static String[] getAdrenoGPUPowerLevels() {
-        String leves = KernelProrp.INSTANCE.getProp("/sys/class/kgsl/kgsl-3d0/num_pwrlevels");
-        try {
-            int max = Integer.parseInt(leves);
-            ArrayList<String> arr = new ArrayList<>();
-            for (int i = 0; i < max; i++) {
-                arr.add("" + i);
-            }
-            return arr.toArray(new String[arr.size()]);
-        } catch (Exception ignored) {
-        }
-        return new String[]{};
-    }
 
     private static int getCpuIndex(String[] cols) {
-        int cpuIndex = -1;
+        int cpuIndex;
         if (cols[0].equals("cpu")) {
             cpuIndex = -1;
         } else {
@@ -289,5 +160,13 @@ public class CpuFrequencyUtils {
         } else {
             return loads;
         }
+    }
+
+    public static ArrayList<String[]> getCpuClusterInfo() {
+        return cpuClusterInfo;
+    }
+
+    public static void setCpuClusterInfo(ArrayList<String[]> cpuClusterInfo) {
+        CpuFrequencyUtils.cpuClusterInfo = cpuClusterInfo;
     }
 }
