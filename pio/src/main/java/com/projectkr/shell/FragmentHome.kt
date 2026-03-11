@@ -47,7 +47,7 @@ class FragmentHome : Fragment() {
         binding.homeClearRam.setOnClickListener {
             binding.homeRaminfoText.text = getString(R.string.please_wait)
             Thread {
-                KeepShellPublic.doCmdSync("sync\n" + "echo 3 > /proc/sys/vm/drop_caches\n" + "echo 1 > /proc/sys/vm/compact_memory")
+                KeepShellPublic.doCmdSync(listOf("sync\n" , "echo 3 > /proc/sys/vm/drop_caches\n" , "echo 1 > /proc/sys/vm/compact_memory"))
                 myHandler.postDelayed({
                     try {
                         updateRamInfo()
@@ -64,7 +64,7 @@ class FragmentHome : Fragment() {
         binding.homeClearSwap.setOnClickListener {
             binding.homeZramsizeText.text = getString(R.string.please_wait)
             Thread {
-                KeepShellPublic.doCmdSync("sync\n" + "echo 1 > /proc/sys/vm/compact_memory")
+                KeepShellPublic.doCmdSync(listOf("sync\n" , "echo 1 > /proc/sys/vm/compact_memory"))
                 myHandler.postDelayed({
                     try {
                         updateRamInfo()
@@ -122,7 +122,7 @@ class FragmentHome : Fragment() {
             val availMem = (info.availMem / 1024 / 1024f).toInt()
             binding.homeRaminfoText.text = "${((totalMem - availMem) * 100 / totalMem)}% (${totalMem / 1024 + 1}GB)"
             binding.homeRaminfo.setData(totalMem.toFloat(), availMem.toFloat())
-            val swapInfo = KeepShellPublic.doCmdSync("free -m | grep Swap")
+            val swapInfo = KeepShellPublic.doCmdSync(listOf("free -m | grep Swap"))
             if (swapInfo.contains("Swap")) {
                 try {
                     val swapInfos = swapInfo.substring(swapInfo.indexOf(" "), swapInfo.lastIndexOf(" ")).trim()
