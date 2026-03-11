@@ -29,6 +29,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -63,6 +64,7 @@ import top.yukonga.miuix.kmp.icon.extended.Favorites
 import top.yukonga.miuix.kmp.icon.extended.MapAlbum
 import top.yukonga.miuix.kmp.icon.extended.More
 import androidx.core.view.isVisible
+import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.icon.extended.Layers
 
 enum class MainTab {
