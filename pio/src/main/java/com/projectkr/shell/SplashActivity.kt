@@ -143,7 +143,6 @@ class SplashActivity : ComponentActivity() {
      * 界面主题样式调整
      */
     private fun updateThemeStyle() {
-        window.navigationBarColor = getColorAccent()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.navigationBarColor = getColor(R.color.splash_bg_color)
         } else {
@@ -161,11 +160,7 @@ class SplashActivity : ComponentActivity() {
         }
     }
 
-    private fun getColorAccent(): Int {
-        val typedValue = TypedValue()
-        this.theme.resolveAttribute(androidx.appcompat.R.attr.colorAccent, typedValue, true)
-        return typedValue.data
-    }
+
 
     /**
      * 开始检查必需权限
@@ -250,8 +245,7 @@ class SplashActivity : ComponentActivity() {
                         someIgnored = true
                     }
                     notificationMessageRows.add(log)
-                    logView.value =
-                        notificationMessageRows.joinToString("\n", if (someIgnored) "……\n" else "").trim()
+                    logView.value += notificationMessageRows.joinToString("\n", if (someIgnored) "……\n" else "").trim()
                 }
             }
         }
