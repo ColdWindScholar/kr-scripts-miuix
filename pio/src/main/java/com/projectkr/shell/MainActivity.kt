@@ -159,8 +159,6 @@ class MainActivity : AppCompatActivity() {
                                     MainTab.Favourites -> {
                                         FrameLayout(context).apply {
                                             id = View.generateViewId()
-                                        val favoritesConfig = krScriptConfig.favoriteConfig
-                                        favorites = getItems(favoritesConfig)
                                         val favoritesFragment = ActionListFragment.create(favorites, getKrScriptActionHandler(favoritesConfig, true), null, ThemeModeState.getThemeMode())
                                         fragmentManager.beginTransaction().replace(id, favoritesFragment).commitAllowingStateLoss()
                                     }}
@@ -168,8 +166,6 @@ class MainActivity : AppCompatActivity() {
                                     MainTab.Pages -> {
                                         FrameLayout(context).apply {
                                             id = View.generateViewId()
-                                        val page2Config = krScriptConfig.pageListConfig
-                                        pages = getItems(page2Config)
                                         val allItemFragment = ActionListFragment.create(pages, getKrScriptActionHandler(page2Config, false), null, ThemeModeState.getThemeMode())
                                         fragmentManager.beginTransaction().replace(id, allItemFragment).commitAllowingStateLoss()
                                     }}
