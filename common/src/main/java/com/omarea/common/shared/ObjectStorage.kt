@@ -10,7 +10,7 @@ open class ObjectStorage<T : Serializable>(private val context: Context) {
         return FileWrite.getPrivateFilePath(context, objectStorageDir + configFile)
     }
 
-    public open fun load(configFile: String): T? {
+    open fun load(configFile: String): T? {
         val file = File(getSaveDir(configFile))
         if (file.exists()) {
             var fileInputStream: FileInputStream? = null;
@@ -54,12 +54,8 @@ open class ObjectStorage<T : Serializable>(private val context: Context) {
                 return false
             } finally {
                 try {
-                    if (objectOutputStream != null) {
-                        objectOutputStream.close()
-                    }
-                    if (fileOutputStream != null) {
-                        fileOutputStream.close()
-                    }
+                    objectOutputStream?.close()
+                    fileOutputStream?.close()
                 } catch (ex: Exception) {
                 }
             }

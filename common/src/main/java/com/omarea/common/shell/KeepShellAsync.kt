@@ -14,15 +14,15 @@ import java.util.concurrent.locks.ReentrantLock
 /**
  * Created by Hello on 2018/01/23.
  */
-public class KeepShellAsync(private var context: Context?, private var rootMode: Boolean = true) : ShellEvents() {
+class KeepShellAsync(private var context: Context?, private var rootMode: Boolean = true) : ShellEvents() {
     companion object {
         private val keepShells = HashMap<String, KeepShellAsync>()
         fun getInstance(key: String): KeepShellAsync {
             synchronized(keepShells) {
                 if (!keepShells.containsKey(key)) {
-                    keepShells.put(key, KeepShellAsync(null))
+                    keepShells[key] = KeepShellAsync(null)
                 }
-                return keepShells.get(key)!!
+                return keepShells[key]!!
             }
         }
 

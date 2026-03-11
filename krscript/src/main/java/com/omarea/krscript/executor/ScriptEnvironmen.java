@@ -178,7 +178,7 @@ public class ScriptEnvironmen {
         }
 
         String script2 = script.trim();
-        String path = "";
+        String path;
         if (script2.startsWith(ASSETS_FILE)) {
             path = extractScript(context, script2);
         } else {

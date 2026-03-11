@@ -27,30 +27,11 @@ class RootFileInfo {
         }
 
     val absolutePath: String
-        get() = parentDir + "/" + fileName
+        get() = "$parentDir/$fileName"
 
 
-    public fun exists(): Boolean {
+    fun exists(): Boolean {
         return RootFile.itemExists(this.absolutePath)
-    }
-
-    public fun isFile(): Boolean {
-        return !isDirectory
-    }
-
-    public fun getParent(): String {
-        return this.parentDir
-    }
-
-    public fun getName(): String {
-        return this.fileName
-    }
-
-    public fun listFiles(): ArrayList<RootFileInfo> {
-        if (this.isDirectory) {
-            return RootFile.list(this.absolutePath)
-        }
-        return ArrayList()
     }
 
     fun length(): Long {

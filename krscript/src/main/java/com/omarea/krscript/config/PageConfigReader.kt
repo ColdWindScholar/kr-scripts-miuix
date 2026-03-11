@@ -1,7 +1,6 @@
 package com.omarea.krscript.config
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -9,13 +8,23 @@ import android.text.Layout
 import android.util.Log
 import android.util.Xml
 import android.widget.Toast
+import androidx.core.graphics.toColorInt
 import com.omarea.common.model.SelectItem
 import com.omarea.krscript.executor.ExtractAssets
 import com.omarea.krscript.executor.ScriptEnvironmen
-import com.omarea.krscript.model.*
+import com.omarea.krscript.model.ActionNode
+import com.omarea.krscript.model.ActionParamInfo
+import com.omarea.krscript.model.ClickableNode
+import com.omarea.krscript.model.GroupNode
+import com.omarea.krscript.model.NodeInfoBase
+import com.omarea.krscript.model.PageMenuOption
+import com.omarea.krscript.model.PageNode
+import com.omarea.krscript.model.PickerNode
+import com.omarea.krscript.model.RunnableNode
+import com.omarea.krscript.model.SwitchNode
+import com.omarea.krscript.model.TextNode
 import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream
-import java.util.Locale
 import java.util.Locale.getDefault
 
 /**
@@ -128,68 +137,80 @@ class PageConfigReader {
                             }
                             group = null
                         } else if (group != null) {
-                            if ("page" == parser.name) {
-                                tagEndInPage(page, parser)
-                                if (page != null) {
-                                    group.children.add(page)
+                            when (parser.name) {
+                                "page" -> {
+                                    tagEndInPage(page, parser)
+                                    if (page != null) {
+                                        group.children.add(page)
+                                    }
+                                    page = null
                                 }
-                                page = null
-                            } else if ("action" == parser.name) {
-                                tagEndInAction(action, parser)
-                                if (action != null) {
-                                    group.children.add(action)
+                                "action" -> {
+                                    tagEndInAction(action, parser)
+                                    if (action != null) {
+                                        group.children.add(action)
+                                    }
+                                    action = null
                                 }
-                                action = null
-                            } else if ("switch" == parser.name) {
-                                tagEndInSwitch(switch, parser)
-                                if (switch != null) {
-                                    group.children.add(switch)
+                                "switch" -> {
+                                    tagEndInSwitch(switch, parser)
+                                    if (switch != null) {
+                                        group.children.add(switch)
+                                    }
+                                    switch = null
                                 }
-                                switch = null
-                            } else if ("picker" == parser.name) {
-                                tagEndInPicker(picker, parser)
-                                if (picker != null) {
-                                    group.children.add(picker)
+                                "picker" -> {
+                                    tagEndInPicker(picker, parser)
+                                    if (picker != null) {
+                                        group.children.add(picker)
+                                    }
+                                    picker = null
                                 }
-                                picker = null
-                            } else if ("text" == parser.name) {
-                                tagEndInText(text, parser)
-                                if (text != null) {
-                                    group.children.add(text)
+                                "text" -> {
+                                    tagEndInText(text, parser)
+                                    if (text != null) {
+                                        group.children.add(text)
+                                    }
+                                    text = null
                                 }
-                                text = null
                             }
                         } else {
-                            if ("page" == parser.name) {
-                                tagEndInPage(page, parser)
-                                if (page != null) {
-                                    mainList.add(page)
+                            when (parser.name) {
+                                "page" -> {
+                                    tagEndInPage(page, parser)
+                                    if (page != null) {
+                                        mainList.add(page)
+                                    }
+                                    page = null
                                 }
-                                page = null
-                            } else if ("action" == parser.name) {
-                                tagEndInAction(action, parser)
-                                if (action != null) {
-                                    mainList.add(action)
+                                "action" -> {
+                                    tagEndInAction(action, parser)
+                                    if (action != null) {
+                                        mainList.add(action)
+                                    }
+                                    action = null
                                 }
-                                action = null
-                            } else if ("switch" == parser.name) {
-                                tagEndInSwitch(switch, parser)
-                                if (switch != null) {
-                                    mainList.add(switch)
+                                "switch" -> {
+                                    tagEndInSwitch(switch, parser)
+                                    if (switch != null) {
+                                        mainList.add(switch)
+                                    }
+                                    switch = null
                                 }
-                                switch = null
-                            } else if ("picker" == parser.name) {
-                                tagEndInPicker(picker, parser)
-                                if (picker != null) {
-                                    mainList.add(picker)
+                                "picker" -> {
+                                    tagEndInPicker(picker, parser)
+                                    if (picker != null) {
+                                        mainList.add(picker)
+                                    }
+                                    picker = null
                                 }
-                                picker = null
-                            } else if ("text" == parser.name) {
-                                tagEndInText(text, parser)
-                                if (text != null) {
-                                    mainList.add(text)
+                                "text" -> {
+                                    tagEndInText(text, parser)
+                                    if (text != null) {
+                                        mainList.add(text)
+                                    }
+                                    text = null
                                 }
-                                text = null
                             }
                         }
                 }
@@ -578,16 +599,22 @@ class PageConfigReader {
     }
 
     private fun tagStartInText(textNode: TextNode, parser: XmlPullParser) {
-        if ("title" == parser.name) {
-            textNode.title = parser.nextText()
-        } else if ("desc" == parser.name) {
-            descNode(textNode, parser)
-        } else if ("summary" == parser.name) {
-            summaryNode(textNode, parser)
-        } else if ("slice" == parser.name) {
-            rowNode(textNode, parser)
-        } else if ("resource" == parser.name) {
-            resourceNode(parser)
+        when (parser.name) {
+            "title" -> {
+                textNode.title = parser.nextText()
+            }
+            "desc" -> {
+                descNode(textNode, parser)
+            }
+            "summary" -> {
+                summaryNode(textNode, parser)
+            }
+            "slice" -> {
+                rowNode(textNode, parser)
+            }
+            "resource" -> {
+                resourceNode(parser)
+            }
         }
     }
 
@@ -601,8 +628,8 @@ class PageConfigReader {
                     "bold", "b" -> textRow.bold = (attrValue == "1" || attrValue == "true" || attrValue == "bold")
                     "italic", "i" -> textRow.italic = (attrValue == "1" || attrValue == "true" || attrValue == "italic")
                     "underline", "u" -> textRow.underline = (attrValue == "1" || attrValue == "true" || attrValue == "underline")
-                    "foreground", "color" -> textRow.color = Color.parseColor(attrValue)
-                    "bg", "background", "bgcolor" -> textRow.bgColor = Color.parseColor(attrValue)
+                    "foreground", "color" -> textRow.color = attrValue.toColorInt()
+                    "bg", "background", "bgcolor" -> textRow.bgColor = attrValue.toColorInt()
                     "size" -> textRow.size = attrValue.toInt()
                     "break" -> textRow.breakRow = (attrValue == "1" || attrValue == "true" || attrValue == "break")
                     "link", "href" -> textRow.link = attrValue
@@ -631,35 +658,44 @@ class PageConfigReader {
     }
 
     private fun tagStartInPicker(pickerNode: PickerNode, parser: XmlPullParser) {
-        if ("title" == parser.name) {
-            pickerNode.title = parser.nextText()
-        } else if ("desc" == parser.name) {
-            descNode(pickerNode, parser)
-        } else if ("summary" == parser.name) {
-            summaryNode(pickerNode, parser)
-        } else if ("option" == parser.name) {
-            if (pickerNode.options == null) {
-                pickerNode.options = ArrayList()
+        when (parser.name) {
+            "title" -> {
+                pickerNode.title = parser.nextText()
             }
-            val option = SelectItem()
-            for (i in 0 until parser.attributeCount) {
-                val attrName = parser.getAttributeName(i)
-                if (attrName == "val" || attrName == "value") {
-                    option.value = parser.getAttributeValue(i)
+            "desc" -> {
+                descNode(pickerNode, parser)
+            }
+            "summary" -> {
+                summaryNode(pickerNode, parser)
+            }
+            "option" -> {
+                if (pickerNode.options == null) {
+                    pickerNode.options = ArrayList()
                 }
+                val option = SelectItem()
+                for (i in 0 until parser.attributeCount) {
+                    val attrName = parser.getAttributeName(i)
+                    if (attrName == "val" || attrName == "value") {
+                        option.value = parser.getAttributeValue(i)
+                    }
+                }
+                option.title = parser.nextText()
+                if (option.value == null)
+                    option.value = option.title
+                pickerNode.options!!.add(option)
             }
-            option.title = parser.nextText()
-            if (option.value == null)
-                option.value = option.title
-            pickerNode.options!!.add(option)
-        } else if ("getstate" == parser.name || "get" == parser.name) {
-            pickerNode.getState = parser.nextText()
-        } else if ("setstate" == parser.name || "set" == parser.name) {
-            pickerNode.setState = parser.nextText()
-        } else if ("resource" == parser.name) {
-            resourceNode(parser)
-        } else if ("lock" == parser.name || "lock-state" == parser.name) {
-            pickerNode.lockShell = parser.nextText()
+            "getstate", "get" -> {
+                pickerNode.getState = parser.nextText()
+            }
+            "setstate", "set" -> {
+                pickerNode.setState = parser.nextText()
+            }
+            "resource" -> {
+                resourceNode(parser)
+            }
+            "lock", "lock-state" -> {
+                pickerNode.lockShell = parser.nextText()
+            }
         }
     }
 

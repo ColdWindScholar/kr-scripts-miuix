@@ -146,10 +146,10 @@ class PathAnalysis(private var context: Context, private var parentDir: String =
                 }
             } else {
                 // 如果当前配置文件来源于 assets，则查找依赖资源时也只去assets查找
-                if (parentDir.isNotEmpty() && parentDir.startsWith(ASSETS_FILE)) {
-                    return findAssetsResource(filePath)
+                return if (parentDir.isNotEmpty() && parentDir.startsWith(ASSETS_FILE)) {
+                    findAssetsResource(filePath)
                 } else {
-                    return findDiskResource(filePath)
+                    findDiskResource(filePath)
                 }
             }
         } catch (ex: java.lang.Exception) {
