@@ -2,10 +2,8 @@ package com.projectkr.shell
 
 import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.app.Activity
 import android.app.ActivityManager
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -22,19 +20,26 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.omarea.common.shared.FilePathResolver
 import com.omarea.common.ui.ProgressBarDialog
+import com.omarea.krscript.R
 import com.omarea.krscript.TryOpenActivity
 import com.omarea.krscript.config.IconPathAnalysis
 import com.omarea.krscript.config.PageConfigReader
 import com.omarea.krscript.config.PageConfigSh
 import com.omarea.krscript.executor.ScriptEnvironmen
-import com.omarea.krscript.model.*
+import com.omarea.krscript.model.AutoRunTask
+import com.omarea.krscript.model.ClickableNode
+import com.omarea.krscript.model.KrScriptActionHandler
+import com.omarea.krscript.model.NodeInfoBase
+import com.omarea.krscript.model.PageMenuOption
+import com.omarea.krscript.model.PageNode
+import com.omarea.krscript.model.RunnableNode
 import com.omarea.krscript.shortcut.ActionShortcutManager
 import com.omarea.krscript.ui.ActionListFragment
 import com.omarea.krscript.ui.DialogLogFragment
-import com.omarea.krscript.ui.ParamsFileChooserRender
 import com.omarea.krscript.ui.PageMenuLoader
+import com.omarea.krscript.ui.ParamsFileChooserRender
 import com.projectkr.shell.databinding.ActivityActionPageBinding
-import com.omarea.krscript.R
+
 class ActionPage : AppCompatActivity() {
     private lateinit var binding: ActivityActionPageBinding
     private val progressBarDialog = ProgressBarDialog(this)
