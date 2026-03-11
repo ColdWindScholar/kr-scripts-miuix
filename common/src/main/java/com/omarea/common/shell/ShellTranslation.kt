@@ -50,13 +50,11 @@ class ShellTranslation(val context: Context) {
 
     fun resolveRows(rows: List<String>): String {
         val builder = StringBuilder()
-        var rowIndex = 0
-        for (row in rows) {
+        for ((rowIndex, row) in rows.withIndex()) {
             if (rowIndex > 0) {
                 builder.append("\n")
             }
             builder.append(resolveRow(row))
-            rowIndex ++
         }
         return builder.toString()
     }
