@@ -237,7 +237,6 @@ class MainActivity : AppCompatActivity() {
                                     MainTab.Home -> {
                                         FrameLayout(context).apply {
                                             id = View.generateViewId()
-                                            // 2. 必须设置一个 ID，且该 ID 需与 Transaction 中的 ID 一致
                                         if (CheckRootStatus.lastCheckResult && krScriptConfig.allowHomePage) {//fixme:just for debug: CheckRootStatus.lastCheckResult && krScriptConfig.allowHomePage
                                             val home = FragmentHome()
                                             val fragmentManager = fragmentManager
@@ -286,7 +285,6 @@ class MainActivity : AppCompatActivity() {
                         color = Color.Gray
                     )
 
-                    // 第一行：并排的两个按钮
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -295,7 +293,7 @@ class MainActivity : AppCompatActivity() {
                             modifier = Modifier.weight(1f),
                             title = "关机",
                             desc = "正常关机",
-                            iconRes = R.drawable.power_shutdown, // 替换为你的资源ID
+                            iconRes = R.drawable.power_shutdown,
                             iconBgColor = Color(0xFF4BA5FF)
                         ) {
                             showPowerDialog.value = false
@@ -313,7 +311,6 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    // 后续单行按钮
                     PowerItem(
                         title = "热重启",
                         desc = "只重启系统界面而不重新引导系统（可能引发Bug）",
