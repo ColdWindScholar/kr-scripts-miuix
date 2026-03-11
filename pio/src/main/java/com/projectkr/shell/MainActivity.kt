@@ -270,7 +270,8 @@ class MainActivity : AppCompatActivity() {
                 showPowerDialog,
                 onDismissRequest = {
                     showPowerDialog.value = false
-                }
+                },
+                title = "选择操作"
             ) {
                 Column(
                     modifier = Modifier
@@ -278,13 +279,6 @@ class MainActivity : AppCompatActivity() {
                         .padding(horizontal = 8.dp, vertical = 16.dp)
                         .alpha(0.85f),
                 ) {
-                    Text(
-                        text = "选择操作",
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                        color = Color.Gray
-                    )
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
