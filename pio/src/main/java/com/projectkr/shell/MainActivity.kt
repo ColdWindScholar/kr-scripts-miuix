@@ -236,7 +236,7 @@ class MainActivity : AppCompatActivity() {
                                     MainTab.Home -> {
                                         FrameLayout(context).apply {
                                             id = View.generateViewId()
-                                        if (CheckRootStatus.lastCheckResult && krScriptConfig.allowHomePage) {//fixme:just for debug: CheckRootStatus.lastCheckResult && krScriptConfig.allowHomePage
+                                        if (krScriptConfig.allowHomePage) {
                                             val home = FragmentHome()
                                             val fragmentManager = fragmentManager
                                             val transaction = fragmentManager.beginTransaction()
