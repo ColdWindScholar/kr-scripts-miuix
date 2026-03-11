@@ -66,9 +66,9 @@ class PathAnalysis(private var context: Context, private var parentDir: String =
             val cachePath = FileWrite.getPrivateFilePath(context, "kr-script/outside_file.cache")
             val fileOwner = FileOwner(context).fileOwner
             KeepShellPublic.doCmdSync(
-                    "cp -f \"$filePath\" \"$cachePath\"\n" +
-                            "chmod 777 \"$cachePath\"\n" +
-                            "chown $fileOwner:$fileOwner \"$cachePath\"\n")
+                    listOf("cp -f \"$filePath\" \"$cachePath\"\n" ,
+                            "chmod 777 \"$cachePath\"\n" ,
+                            "chown $fileOwner:$fileOwner \"$cachePath\"\n"))
             File(cachePath).run {
                 if (exists() && canRead()) {
                     return inputStream()
