@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -48,7 +47,6 @@ import com.omarea.krscript.executor.ScriptEnvironmen
 import com.projectkr.shell.permissions.CheckRootStatus
 import java.io.BufferedReader
 import java.io.DataOutputStream
-import java.util.HashMap
 
 
 class SplashActivity : ComponentActivity() {
