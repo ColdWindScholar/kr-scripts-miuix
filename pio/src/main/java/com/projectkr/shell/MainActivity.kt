@@ -18,20 +18,45 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.PermissionChecker
@@ -47,22 +72,78 @@ import com.omarea.krscript.ui.ParamsFileChooserRender
 import com.omarea.vtools.FloatMonitor
 import com.projectkr.shell.permissions.CheckRootStatus
 import kotlinx.coroutines.launch
+import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import top.yukonga.miuix.kmp.basic.NavigationDisplayMode
 import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Favorites
 import top.yukonga.miuix.kmp.icon.extended.MapAlbum
 import top.yukonga.miuix.kmp.icon.extended.More
+import top.yukonga.miuix.kmp.theme.TextStyles
 
 enum class MainTab {
     Home, Favourites, Pages
 }
 enum class MenuItems {
     Graph, Reboot, Info
+}
+@Composable
+fun PowerItem(
+    title: String,
+    desc: String,
+    iconRes: Int,
+    iconBgColor: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 65.dp)
+            .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp)) // 对应卡片样式
+            .clickable { onClick() }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // 图标部分
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(iconBgColor, CircleShape)
+                .alpha(0.8f),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = title,
+                modifier = Modifier.size(24.dp),
+                tint = Color.White
+            )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        // 文本部分
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = desc,
+                fontSize = 12.sp,
+                color = Color.Gray,
+                lineHeight = 16.sp
+            )
+        }
+    }
 }
 class MainActivity : AppCompatActivity() {
     private val progressBarDialog = ProgressBarDialog(this)
@@ -105,6 +186,7 @@ class MainActivity : AppCompatActivity() {
             if (!(checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE) && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 111);
             }
+            val showPowerDialog = remember { mutableStateOf(false) }
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -113,7 +195,9 @@ class MainActivity : AppCompatActivity() {
                             IconButton({onOptionsItemSelected(MenuItems.Graph.ordinal)}) { Icon(
                                 painter = painterResource(R.drawable.graph), null
                             ) }
-                            IconButton({onOptionsItemSelected(MenuItems.Reboot.ordinal)})
+                            IconButton({
+                                showPowerDialog.value = true
+                            })
                             { Icon(painter = painterResource(R.drawable.power), null) }
                             IconButton({onOptionsItemSelected(MenuItems.Info.ordinal)})
                             { Icon(painter = painterResource(R.drawable.info), null) }
@@ -183,6 +267,70 @@ class MainActivity : AppCompatActivity() {
                         )
 
                     }
+                }
+            }
+            SuperDialog(
+                showPowerDialog,
+                onDismissRequest = {
+                    showPowerDialog.value = false
+                }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .alpha(0.85f),
+                ) {
+                    Text(
+                        text = "选择操作",
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        color = Color.Gray
+                    )
+
+                    // 第一行：并排的两个按钮
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        PowerItem(
+                            modifier = Modifier.weight(1f),
+                            title = "关机",
+                            desc = "正常关机",
+                            iconRes = R.drawable.power_shutdown, // 替换为你的资源ID
+                            iconBgColor = Color(0xFF4BA5FF)
+                        ) { /* 执行关机 */ }
+
+                        PowerItem(
+                            modifier = Modifier.weight(1f),
+                            title = "重启",
+                            desc = "正常重启",
+                            iconRes = R.drawable.power_reboot,
+                            iconBgColor = Color(0xFF8BC34A)
+                        ) { /* 执行重启 */ }
+                    }
+
+                    // 后续单行按钮
+                    PowerItem(
+                        title = "热重启",
+                        desc = "只重启系统界面而不重新引导系统（可能引发Bug）",
+                        iconRes = R.drawable.power_hot_reboot,
+                        iconBgColor = Color(0xFF00BCD4)
+                    ) { /* 执行热重启 */ }
+
+                    PowerItem(
+                        title = "Recovery",
+                        desc = "重启到Recovery模式（俗称卡刷模式）",
+                        iconRes = R.drawable.power_recovery,
+                        iconBgColor = Color(0xFF787878)
+                    ) { /* 执行 Recovery */ }
+
+                    PowerItem(
+                        title = "Fastboot",
+                        desc = "重启到引导模式（俗称线刷模式）",
+                        iconRes = R.drawable.power_fastboot,
+                        iconBgColor = Color(0xFFFF9800)
+                    ) { /* 执行 Fastboot */ }
                 }
             }
         }
@@ -324,7 +472,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ACTION_FILE_PATH_CHOOSER) {
-            val result = if (data == null || resultCode != Activity.RESULT_OK) null else data.data
+            val result = if (data == null || resultCode != RESULT_OK) null else data.data
             if (fileSelectedInterface != null) {
                 if (result != null) {
                     val absPath = getPath(result)
