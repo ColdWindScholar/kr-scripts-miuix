@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
             )
             val pagerState = rememberPagerState(
                 initialPage = 0,
-                pageCount = { items.filter { (it != null) }.size }
+                pageCount = { items.filterNotNull().size }
             )
             val coroutineScope = rememberCoroutineScope()
 
