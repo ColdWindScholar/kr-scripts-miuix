@@ -58,6 +58,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.FragmentActivity
 import com.omarea.common.shared.FilePathResolver
+import com.omarea.common.shell.KeepShellPublic
 import com.omarea.common.ui.DialogHelper
 import com.omarea.common.ui.ProgressBarDialog
 import com.omarea.krscript.config.PageConfigReader
@@ -89,7 +90,7 @@ enum class MainTab {
     Home, Favourites, Pages
 }
 enum class MenuItems {
-    Graph, Reboot, Info
+    Graph, Info
 }
 @Composable
 fun PowerItem(
@@ -296,7 +297,10 @@ class MainActivity : AppCompatActivity() {
                             desc = "正常关机",
                             iconRes = R.drawable.power_shutdown, // 替换为你的资源ID
                             iconBgColor = Color(0xFF4BA5FF)
-                        ) { /* 执行关机 */ }
+                        ) {
+                            showPowerDialog.value = false
+                            KeepShellPublic.doCmdSync(getString(R.string.power_shutdown_cmd))
+                        }
 
                         PowerItem(
                             modifier = Modifier.weight(1f),
@@ -304,7 +308,9 @@ class MainActivity : AppCompatActivity() {
                             desc = "正常重启",
                             iconRes = R.drawable.power_reboot,
                             iconBgColor = Color(0xFF8BC34A)
-                        ) { /* 执行重启 */ }
+                        ) { showPowerDialog.value = false
+                            KeepShellPublic.doCmdSync(getString(R.string.power_reboot_cmd))
+                        }
                     }
 
                     // 后续单行按钮
@@ -313,27 +319,36 @@ class MainActivity : AppCompatActivity() {
                         desc = "只重启系统界面而不重新引导系统（可能引发Bug）",
                         iconRes = R.drawable.power_hot_reboot,
                         iconBgColor = Color(0xFF00BCD4)
-                    ) { /* 执行热重启 */ }
+                    ) {
+                        showPowerDialog.value = false
+                        KeepShellPublic.doCmdSync(getString(R.string.power_hot_reboot_cmd))
+                    }
 
                     PowerItem(
                         title = "Recovery",
                         desc = "重启到Recovery模式（俗称卡刷模式）",
                         iconRes = R.drawable.power_recovery,
                         iconBgColor = Color(0XC8787878)
-                    ) { /* 执行 Recovery */ }
+                    ) { showPowerDialog.value = false
+                        KeepShellPublic.doCmdSync(getString(R.string.power_recovery_cmd))
+                    }
 
                     PowerItem(
                         title = "Fastboot",
                         desc = "重启到引导模式（俗称线刷模式）",
                         iconRes = R.drawable.power_fastboot,
                         iconBgColor = Color(0XC8787878)
-                    ) { /* 执行 Fastboot */ }
+                    ) { showPowerDialog.value = false
+                        KeepShellPublic.doCmdSync(getString(R.string.power_fastboot_cmd))
+                    }
                     PowerItem(
                         title = "9008(EDL)",
                         desc = "重启到9008模式，*此模式仅限部分骁龙设备可用",
                         iconRes = R.drawable.power_emergency,
                         iconBgColor = Color(0XC8787878)
-                    ) { /* 执行 Fastboot */ }
+                    ) { showPowerDialog.value = false
+                        KeepShellPublic.doCmdSync(getString(R.string.power_emergency_cmd))
+                    }
                 }
             }
         }
@@ -524,9 +539,6 @@ class MainActivity : AppCompatActivity() {
                 transparentUi.isChecked = themeConfig.getAllowTransparentUI()
 
                 DialogHelper.customDialog(this, layout)
-            }
-            MenuItems.Reboot -> {
-                DialogPower(this).showPowerMenu()
             }
             MenuItems.Graph -> {
                 if (FloatMonitor.isShown == true) {
