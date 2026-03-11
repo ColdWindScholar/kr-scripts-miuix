@@ -86,11 +86,12 @@ class KeepShell(private var rootMode: Boolean = true) {
 
     private fun getRuntimeShell() {
         if (p != null) return
-        val getSu = Thread(Runnable {
+        val getSu = Thread {
             try {
                 mLock.lockInterruptibly()
                 enterLockTime = System.currentTimeMillis()
-                p = if (rootMode) ShellExecutor.getSuperUserRuntime() else ShellExecutor.getRuntime()
+                p =
+                    if (rootMode) ShellExecutor.getSuperUserRuntime() else ShellExecutor.getRuntime()
                 out = p!!.outputStream
                 reader = p!!.inputStream.bufferedReader()
                 if (rootMode) {
@@ -99,24 +100,24 @@ class KeepShell(private var rootMode: Boolean = true) {
                         flush()
                     }
                 }
-                Thread(Runnable {
+                Thread {
                     try {
                         val errorReader =
-                                p!!.errorStream.bufferedReader()
+                            p!!.errorStream.bufferedReader()
                         while (true) {
                             Log.e("KeepShellPublic", errorReader.readLine())
                         }
                     } catch (ex: Exception) {
                         Log.e("c", "" + ex.message)
                     }
-                }).start()
+                }.start()
             } catch (ex: Exception) {
                 Log.e("getRuntime", "" + ex.message)
             } finally {
                 enterLockTime = 0L
                 mLock.unlock()
             }
-        })
+        }
         getSu.start()
         getSu.join(10000)
         if (p == null && getSu.state != Thread.State.TERMINATED) {
