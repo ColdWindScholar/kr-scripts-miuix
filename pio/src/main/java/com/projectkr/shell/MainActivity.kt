@@ -16,6 +16,7 @@ import android.widget.CompoundButton
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -70,7 +71,6 @@ import com.omarea.krscript.model.RunnableNode
 import com.omarea.krscript.ui.ActionListFragment
 import com.omarea.krscript.ui.ParamsFileChooserRender
 import com.omarea.vtools.FloatMonitor
-import com.projectkr.shell.permissions.CheckRootStatus
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
@@ -149,6 +149,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermission(permission: String): Boolean = PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
 
+    @RequiresPermission(anyOf = ["android.permission.READ_WALLPAPER_INTERNAL", Manifest.permission.MANAGE_EXTERNAL_STORAGE])
     @SuppressLint("ContextCastToActivity")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -290,7 +291,7 @@ class MainActivity : AppCompatActivity() {
                             iconBgColor = Color(0xFF4BA5FF)
                         ) {
                             showPowerDialog.value = false
-                            KeepShellPublic.doCmdSync(getString(R.string.power_shutdown_cmd))
+                            KeepShellPublic.doCmdSync(listOf(getString(R.string.power_shutdown_cmd)))
                         }
 
                         PowerItem(
@@ -300,7 +301,7 @@ class MainActivity : AppCompatActivity() {
                             iconRes = R.drawable.power_reboot,
                             iconBgColor = Color(0xFF8BC34A)
                         ) { showPowerDialog.value = false
-                            KeepShellPublic.doCmdSync(getString(R.string.power_reboot_cmd))
+                            KeepShellPublic.doCmdSync(listOf(getString(R.string.power_reboot_cmd)))
                         }
                     }
 
@@ -311,7 +312,7 @@ class MainActivity : AppCompatActivity() {
                         iconBgColor = Color(0xFF00BCD4)
                     ) {
                         showPowerDialog.value = false
-                        KeepShellPublic.doCmdSync(getString(R.string.power_hot_reboot_cmd))
+                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_hot_reboot_cmd)))
                     }
 
                     PowerItem(
@@ -320,7 +321,7 @@ class MainActivity : AppCompatActivity() {
                         iconRes = R.drawable.power_recovery,
                         iconBgColor = Color(0XC8787878)
                     ) { showPowerDialog.value = false
-                        KeepShellPublic.doCmdSync(getString(R.string.power_recovery_cmd))
+                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_recovery_cmd)))
                     }
 
                     PowerItem(
@@ -329,7 +330,7 @@ class MainActivity : AppCompatActivity() {
                         iconRes = R.drawable.power_fastboot,
                         iconBgColor = Color(0XC8787878)
                     ) { showPowerDialog.value = false
-                        KeepShellPublic.doCmdSync(getString(R.string.power_fastboot_cmd))
+                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_fastboot_cmd)))
                     }
                     PowerItem(
                         title = "9008(EDL)",
@@ -337,7 +338,7 @@ class MainActivity : AppCompatActivity() {
                         iconRes = R.drawable.power_emergency,
                         iconBgColor = Color(0XC8787878)
                     ) { showPowerDialog.value = false
-                        KeepShellPublic.doCmdSync(getString(R.string.power_emergency_cmd))
+                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_emergency_cmd)))
                     }
                 }
             }
