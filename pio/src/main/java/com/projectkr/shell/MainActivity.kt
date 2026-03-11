@@ -124,7 +124,8 @@ class MainActivity : AppCompatActivity() {
                                             pagerState.animateScrollToPage(index)
                                         }
                                     }
-                                )}
+                                )
+                                }
                             }
                         })
                 }
@@ -141,7 +142,6 @@ class MainActivity : AppCompatActivity() {
                         AndroidView(
                             modifier = Modifier.fillMaxSize(),
                             factory = { context ->
-                                println(MainTab.entries[page])
                                 when (MainTab.entries[page]) {
                                     MainTab.Home -> {
                                         FrameLayout(context).apply {
