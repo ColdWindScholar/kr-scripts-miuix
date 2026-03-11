@@ -213,12 +213,12 @@ class MainActivity : AppCompatActivity() {
     }
     private fun updateFavoritesTab(items: ArrayList<NodeInfoBase>, pageNode: PageNode) {
         val favoritesFragment = ActionListFragment.create(items, getKrScriptActionHandler(pageNode, true), null, ThemeModeState.getThemeMode())
-        supportFragmentManager.beginTransaction().replace(R.id.list_favorites, favoritesFragment).commitAllowingStateLoss()
+       // supportFragmentManager.beginTransaction().replace(R.id.list_favorites, favoritesFragment).commitAllowingStateLoss()
     }
 
     private fun updateMoreTab(items: ArrayList<NodeInfoBase>, pageNode: PageNode) {
         val allItemFragment = ActionListFragment.create(items, getKrScriptActionHandler(pageNode, false), null, ThemeModeState.getThemeMode())
-        supportFragmentManager.beginTransaction().replace(R.id.list_pages, allItemFragment).commitAllowingStateLoss()
+        //supportFragmentManager.beginTransaction().replace(R.id.list_pages, allItemFragment).commitAllowingStateLoss()
     }
 
     private fun reloadMoreTab() {
