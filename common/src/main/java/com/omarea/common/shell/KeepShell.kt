@@ -96,7 +96,9 @@ class KeepShell(private var rootMode: Boolean = true) {
                 reader = p!!.inputStream.bufferedReader()
                 if (rootMode) {
                     out?.run {
-                        write(checkRootState.toByteArray(Charset.defaultCharset()))
+                        for (c in checkRootState){
+                            write(c.toByteArray(Charset.defaultCharset()))
+                        }
                         flush()
                     }
                 }
