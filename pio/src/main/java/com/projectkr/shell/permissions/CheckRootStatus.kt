@@ -20,7 +20,7 @@ import kotlin.system.exitProcess
 class CheckRootStatus(var context: Context, private var next: Runnable? = null) {
     var myHandler: Handler = Handler(Looper.getMainLooper())
 
-    var therad: Thread? = null
+    var thread: Thread? = null
     fun forceGetRoot() {
         if (lastCheckResult) {
             if (next != null) {
@@ -28,7 +28,7 @@ class CheckRootStatus(var context: Context, private var next: Runnable? = null) 
             }
         } else {
             var completed = false
-            therad = Thread {
+            thread = Thread {
                 rootStatus = KeepShellPublic.checkRoot()
                 if (completed) {
                     return@Thread
@@ -48,9 +48,9 @@ class CheckRootStatus(var context: Context, private var next: Runnable? = null) 
                                 .setMessage(R.string.error_root)
                                 .setPositiveButton(R.string.btn_retry) { _, _ ->
                                     KeepShellPublic.tryExit()
-                                    if (therad != null && therad!!.isAlive && !therad!!.isInterrupted) {
-                                        therad!!.interrupt()
-                                        therad = null
+                                    if (thread != null && thread!!.isAlive && !thread!!.isInterrupted) {
+                                        thread!!.interrupt()
+                                        thread = null
                                     }
                                     forceGetRoot()
                                 }
@@ -69,7 +69,7 @@ class CheckRootStatus(var context: Context, private var next: Runnable? = null) 
                     }
                 }
             }
-            therad!!.start()
+            thread!!.start()
             Thread {
                 Thread.sleep(1000 * 15)
 
@@ -82,9 +82,9 @@ class CheckRootStatus(var context: Context, private var next: Runnable? = null) 
                             context.getString(R.string.error_su_timeout),
                             null,
                             DialogHelper.DialogButton(context.getString(R.string.btn_retry), {
-                                if (therad != null && therad!!.isAlive && !therad!!.isInterrupted) {
-                                    therad!!.interrupt()
-                                    therad = null
+                                if (thread != null && thread!!.isAlive && !thread!!.isInterrupted) {
+                                    thread!!.interrupt()
+                                    thread = null
                                 }
                                 forceGetRoot()
                             }),
