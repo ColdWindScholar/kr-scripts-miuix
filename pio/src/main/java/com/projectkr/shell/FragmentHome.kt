@@ -3,10 +3,8 @@ package com.projectkr.shell
 import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context.ACTIVITY_SERVICE
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import com.google.android.material.snackbar.Snackbar
 import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
@@ -31,14 +29,9 @@ class FragmentHome : Fragment() {
         return binding.root
     }
 
-    private lateinit var globalSPF: SharedPreferences
     private lateinit var binding: FragmentHomeBinding
     private var timer: Timer? = null
-    private fun showMsg(msg: String) {
-        this.view?.let { Snackbar.make(it, msg, Snackbar.LENGTH_LONG).show() }
-    }
 
-    private lateinit var spf: SharedPreferences
     private var myHandler = Handler()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -140,7 +133,6 @@ class FragmentHome : Fragment() {
                 } catch (ex: java.lang.Exception) {
                 }
                 // home_swapstate.text = swapInfo.substring(swapInfo.indexOf(" "), swapInfo.lastIndexOf(" ")).trim()
-            } else {
             }
         } catch (ex: Exception) {
         }
