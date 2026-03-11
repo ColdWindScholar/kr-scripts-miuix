@@ -61,13 +61,4 @@ class ShellTranslation(val context: Context) {
         return builder.toString()
     }
 
-    fun getTranslatedResult(shellCommand: String, executor: KeepShell?): String {
-        val shell = executor?: KeepShellPublic.getDefaultInstance()
-        val rows = shell.doCmdSync(shellCommand).split("\n")
-        if (rows.isNotEmpty()) {
-            return resolveRows(rows)
-        } else {
-            return ""
-        }
-    }
 }
