@@ -104,7 +104,7 @@ class BgTaskThread(private var process: Process) : Thread() {
             }
 
             if (!isFinished) {
-                notification!!.flags = Notification.FLAG_NO_CLEAR or Notification.FLAG_ONGOING_EVENT
+                notification.flags = Notification.FLAG_NO_CLEAR or Notification.FLAG_ONGOING_EVENT
             }
 
             notificationManager.notify(notificationID, notification); // 发送通知

@@ -25,13 +25,6 @@ public class DownloaderReceiver extends BroadcastReceiver {
         }
     }
 
-    public static void autoUnRegister(Context context) {
-        if (downloaderReceiver != null) {
-            context.unregisterReceiver(downloaderReceiver);
-            downloaderReceiver = null;
-        }
-    }
-
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent != null) {

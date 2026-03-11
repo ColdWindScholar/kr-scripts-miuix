@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
-import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.webkit.URLUtil
@@ -15,19 +14,12 @@ import com.omarea.krscript.R
 import org.json.JSONObject
 import java.io.File
 import java.nio.charset.Charset
-import java.util.Locale
 import java.util.Locale.getDefault
+import androidx.core.net.toUri
 
 class Downloader(private var context: Context, private var activity: Activity? = null) {
     companion object {
         private val HISTORY_CONFIG = "kr_downloader"
-    }
-
-    fun downloadByBrowser(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW);
-        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        intent.setData(Uri.parse(url));
-        activity?.startActivity(intent);
     }
 
     fun downloadBySystem(
@@ -38,7 +30,7 @@ class Downloader(private var context: Context, private var activity: Activity? =
             fileName: String? = null): Long? {
         try {
             // 指定下载地址
-            val request = DownloadManager.Request(Uri.parse(url))
+            val request = DownloadManager.Request(url.toUri())
             // 允许媒体扫描，根据下载的文件类型被加入相册、音乐等媒体库
             request.allowScanningByMediaScanner()
             // 设置通知的显示类型，下载进行时和完成后显示通知

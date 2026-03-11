@@ -18,7 +18,7 @@ import java.util.*
 
 class ActionShortcutManager(private var context: Context) {
     @TargetApi(Build.VERSION_CODES.O)
-    public fun addShortcut(intent: Intent, drawable: Drawable, config: NodeInfoBase): Boolean {
+    fun addShortcut(intent: Intent, drawable: Drawable, config: NodeInfoBase): Boolean {
         // 因为添加快捷方式时无法处理SerializableExtra，所以不得不通过应用本身存储pageNode信息
         if (intent.hasExtra("page")) {
             val pageNode = intent.getSerializableExtra("page") as PageNode
@@ -26,10 +26,10 @@ class ActionShortcutManager(private var context: Context) {
             intent.removeExtra("page")
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return createShortcutOreo(intent, drawable, config)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createShortcutOreo(intent, drawable, config)
         } else {
-            return addShortcutNougat(intent, drawable, config)
+            addShortcutNougat(intent, drawable, config)
         }
     }
 
@@ -46,7 +46,7 @@ class ActionShortcutManager(private var context: Context) {
             shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON, (drawable as BitmapDrawable).bitmap)
 
             val shortcutIntent = Intent(Intent.ACTION_MAIN)
-            shortcutIntent.setClassName(context.getApplicationContext(), intent.component!!.className)
+            shortcutIntent.setClassName(context.applicationContext, intent.component!!.className)
             shortcutIntent.putExtras(intent)
 
             shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
@@ -81,7 +81,7 @@ class ActionShortcutManager(private var context: Context) {
             if (shortcutManager.isRequestPinShortcutSupported) {
                 val id = "addin_" + config.index
                 val shortcutIntent = Intent(Intent.ACTION_MAIN)
-                shortcutIntent.setClassName(context.getApplicationContext(), intent.component!!.className)
+                shortcutIntent.setClassName(context.applicationContext, intent.component!!.className)
                 shortcutIntent.putExtras(intent)
                 shortcutIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
 

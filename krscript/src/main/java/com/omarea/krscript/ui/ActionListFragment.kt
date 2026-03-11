@@ -332,51 +332,73 @@ class ActionListFragment : androidx.fragment.app.Fragment(), PageLayoutRender.On
 
                 val handler = Handler()
                 progressBarDialog.showDialog(this.requireContext().getString(R.string.onloading))
-                Thread(Runnable {
+                Thread {
                     for (actionParamInfo in actionParamInfos) {
                         handler.post {
-                            progressBarDialog.showDialog(this.requireContext().getString(R.string.kr_param_load) + if (!actionParamInfo.label.isNullOrEmpty()) actionParamInfo.label else actionParamInfo.name)
+                            progressBarDialog.showDialog(
+                                this.requireContext()
+                                    .getString(R.string.kr_param_load) + if (!actionParamInfo.label.isNullOrEmpty()) actionParamInfo.label else actionParamInfo.name
+                            )
                         }
                         if (actionParamInfo.valueShell != null) {
-                            actionParamInfo.valueFromShell = executeScriptGetResult(actionParamInfo.valueShell!!, action)
+                            actionParamInfo.valueFromShell =
+                                executeScriptGetResult(actionParamInfo.valueShell!!, action)
                         }
                         handler.post {
-                            progressBarDialog.showDialog(this.requireContext().getString(R.string.kr_param_options_load) + if (!actionParamInfo.label.isNullOrEmpty()) actionParamInfo.label else actionParamInfo.name)
+                            progressBarDialog.showDialog(
+                                this.requireContext()
+                                    .getString(R.string.kr_param_options_load) + if (!actionParamInfo.label.isNullOrEmpty()) actionParamInfo.label else actionParamInfo.name
+                            )
                         }
-                        actionParamInfo.optionsFromShell = getParamOptions(actionParamInfo, action) // 获取参数的可用选项
+                        actionParamInfo.optionsFromShell =
+                            getParamOptions(actionParamInfo, action) // 获取参数的可用选项
                     }
                     handler.post {
-                        progressBarDialog.showDialog(this.requireContext().getString(R.string.kr_params_render))
+                        progressBarDialog.showDialog(
+                            this.requireContext().getString(R.string.kr_params_render)
+                        )
                     }
                     handler.post {
                         val render = ActionParamsLayoutRender(linearLayout, requireActivity())
-                        render.renderList(actionParamInfos, object : ParamsFileChooserRender.FileChooserInterface {
-                            override fun openFileChooser(fileSelectedInterface: ParamsFileChooserRender.FileSelectedInterface): Boolean {
-                                return if (krScriptActionHandler == null) {
-                                    false
-                                } else {
-                                    krScriptActionHandler!!.openFileChooser(fileSelectedInterface)
+                        render.renderList(
+                            actionParamInfos,
+                            object : ParamsFileChooserRender.FileChooserInterface {
+                                override fun openFileChooser(fileSelectedInterface: ParamsFileChooserRender.FileSelectedInterface): Boolean {
+                                    return if (krScriptActionHandler == null) {
+                                        false
+                                    } else {
+                                        krScriptActionHandler!!.openFileChooser(
+                                            fileSelectedInterface
+                                        )
+                                    }
                                 }
-                            }
-                        })
+                            })
                         progressBarDialog.hideDialog()
 
                         // 自定义参数输入界面
-                        val customRunner = krScriptActionHandler?.openParamsPage(action,
-                                linearLayout,
-                                Runnable {
-                                    try {
-                                        val params = render.readParamsValue(actionParamInfos)
-                                        actionExecute(action, script, onExit, params)
-                                    } catch (ex: Exception) {
-                                        Toast.makeText(this.requireContext(), "" + ex.message, Toast.LENGTH_LONG).show()
-                                    }
-                                })
+                        val customRunner = krScriptActionHandler?.openParamsPage(
+                            action,
+                            linearLayout
+                        ) {
+                            try {
+                                val params = render.readParamsValue(actionParamInfos)
+                                actionExecute(action, script, onExit, params)
+                            } catch (ex: Exception) {
+                                Toast.makeText(
+                                    this.requireContext(),
+                                    "" + ex.message,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
 
                         // 内置的参数输入界面
                         if (customRunner != true) {
                             val isLongList = (action.params != null && action.params!!.size > 4)
-                            val dialogView = LayoutInflater.from(context).inflate(if (isLongList) R.layout.kr_dialog_params else R.layout.kr_dialog_params_small, null)
+                            val dialogView = LayoutInflater.from(context).inflate(
+                                if (isLongList) R.layout.kr_dialog_params else R.layout.kr_dialog_params_small,
+                                null
+                            )
                             val center = dialogView.findViewById<ViewGroup>(R.id.kr_params_center)
                             center.removeAllViews()
                             center.addView(linearLayout)
@@ -384,7 +406,10 @@ class ActionListFragment : androidx.fragment.app.Fragment(), PageLayoutRender.On
                             val darkMode = themeMode != null && themeMode!!.isDarkMode
 
                             val dialog = (if (isLongList) {
-                                val builder = AlertDialog.Builder(this.context, if (darkMode) R.style.kr_full_screen_dialog_dark else R.style.kr_full_screen_dialog_light)
+                                val builder = AlertDialog.Builder(
+                                    this.context,
+                                    if (darkMode) R.style.kr_full_screen_dialog_dark else R.style.kr_full_screen_dialog_light
+                                )
                                 builder.setView(dialogView).create().apply {
                                     show()
                                     val window = this.window
@@ -410,24 +435,30 @@ class ActionListFragment : androidx.fragment.app.Fragment(), PageLayoutRender.On
                                 dialogView.findViewById<TextView>(R.id.warn).text = action.warning
                             }
 
-                            dialogView.findViewById<View>(com.omarea.common.R.id.btn_cancel).setOnClickListener {
-                                try {
-                                    dialog!!.dismiss()
-                                } catch (ex: java.lang.Exception) {
+                            dialogView.findViewById<View>(com.omarea.common.R.id.btn_cancel)
+                                .setOnClickListener {
+                                    try {
+                                        dialog!!.dismiss()
+                                    } catch (ex: java.lang.Exception) {
+                                    }
                                 }
-                            }
-                            dialogView.findViewById<View>(com.omarea.common.R.id.btn_confirm).setOnClickListener {
-                                try {
-                                    val params = render.readParamsValue(actionParamInfos)
-                                    actionExecute(action, script, onExit, params)
-                                    dialog!!.dismiss()
-                                } catch (ex: Exception) {
-                                    Toast.makeText(this.requireContext(), "" + ex.message, Toast.LENGTH_LONG).show()
+                            dialogView.findViewById<View>(com.omarea.common.R.id.btn_confirm)
+                                .setOnClickListener {
+                                    try {
+                                        val params = render.readParamsValue(actionParamInfos)
+                                        actionExecute(action, script, onExit, params)
+                                        dialog!!.dismiss()
+                                    } catch (ex: Exception) {
+                                        Toast.makeText(
+                                            this.requireContext(),
+                                            "" + ex.message,
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
                                 }
-                            }
                         }
                     }
-                }).start()
+                }.start()
 
                 return
             }
