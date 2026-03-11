@@ -46,16 +46,20 @@ class FragmentHome : Fragment() {
 
         binding.homeClearRam.setOnClickListener {
             binding.homeRaminfoText.text = getString(R.string.please_wait)
-            Thread(Runnable {
+            Thread {
                 KeepShellPublic.doCmdSync("sync\n" + "echo 3 > /proc/sys/vm/drop_caches\n" + "echo 1 > /proc/sys/vm/compact_memory")
                 myHandler.postDelayed({
                     try {
                         updateRamInfo()
-                        Toast.makeText(context, getString(R.string.monitor_cache_cleared), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            getString(R.string.monitor_cache_cleared),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } catch (ex: java.lang.Exception) {
                     }
                 }, 600)
-            }).start()
+            }.start()
         }
         binding.homeClearSwap.setOnClickListener {
             binding.homeZramsizeText.text = getString(R.string.please_wait)
@@ -155,18 +159,18 @@ class FragmentHome : Fragment() {
             val core = CpuCoreInfo()
 
             core.currentFreq = CpuFrequencyUtils.getCurrentFrequency("cpu$coreIndex")
-            if (!maxFreqs.containsKey(coreIndex) || (core.currentFreq != "" && maxFreqs.get(coreIndex).isNullOrEmpty())) {
-                maxFreqs.put(coreIndex, CpuFrequencyUtils.getCurrentMaxFrequency("cpu" + coreIndex))
+            if (!maxFreqs.containsKey(coreIndex) || (core.currentFreq != "" && maxFreqs[coreIndex].isNullOrEmpty())) {
+                maxFreqs[coreIndex] = CpuFrequencyUtils.getCurrentMaxFrequency("cpu$coreIndex")
             }
-            core.maxFreq = maxFreqs.get(coreIndex)
+            core.maxFreq = maxFreqs[coreIndex]
 
-            if (!minFreqs.containsKey(coreIndex) || (core.currentFreq != "" && minFreqs.get(coreIndex).isNullOrEmpty())) {
-                minFreqs.put(coreIndex, CpuFrequencyUtils.getCurrentMinFrequency("cpu" + coreIndex))
+            if (!minFreqs.containsKey(coreIndex) || (core.currentFreq != "" && minFreqs[coreIndex].isNullOrEmpty())) {
+                minFreqs[coreIndex] = CpuFrequencyUtils.getCurrentMinFrequency("cpu$coreIndex")
             }
-            core.minFreq = minFreqs.get(coreIndex)
+            core.minFreq = minFreqs[coreIndex]
 
             if (loads.containsKey(coreIndex)) {
-                core.loadRatio = loads.get(coreIndex)!!
+                core.loadRatio = loads[coreIndex]!!
             }
             cores.add(core)
         }
