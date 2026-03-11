@@ -90,11 +90,11 @@ class MainActivity : AppCompatActivity() {
                 if (CheckRootStatus.lastCheckResult && krScriptConfig.allowHomePage) NavigationItem(
                     label = getString(R.string.tab_home),
                     icon = MiuixIcons.MapAlbum) else null,
-                if (favorites != null && favorites.size > 0) NavigationItem(label = getString(R.string.tab_favorites), icon = MiuixIcons.Favorites) else null,
-                if (pages != null && pages.size > 0) NavigationItem(label = getString(R.string.tab_pages), icon = MiuixIcons.More) else null
+                if (!favorites.isNullOrEmpty()) NavigationItem(label = getString(R.string.tab_favorites), icon = MiuixIcons.Favorites) else null,
+                if (!pages.isNullOrEmpty()) NavigationItem(label = getString(R.string.tab_pages), icon = MiuixIcons.More) else null
             )
             val pagerState = rememberPagerState(
-                initialPage = 0,
+                initialPage = 2,
                 pageCount = { items.filter { (it != null) }.size }
             )
             val coroutineScope = rememberCoroutineScope()
@@ -193,7 +193,39 @@ class MainActivity : AppCompatActivity() {
 
         return items
     }
+    private fun reloadFavoritesTab() {
+        Thread {
+            val favoritesConfig = krScriptConfig.favoriteConfig
+            val favorites = getItems(favoritesConfig)
+            favorites?.run {
+                handler.post {
+                    updateFavoritesTab(this, favoritesConfig)
+                }
+            }
+        }.start()
+    }
+    private fun updateFavoritesTab(items: ArrayList<NodeInfoBase>, pageNode: PageNode) {
+        val favoritesFragment = ActionListFragment.create(items, getKrScriptActionHandler(pageNode, true), null, ThemeModeState.getThemeMode())
+        supportFragmentManager.beginTransaction().replace(R.id.list_favorites, favoritesFragment).commitAllowingStateLoss()
+    }
 
+    private fun updateMoreTab(items: ArrayList<NodeInfoBase>, pageNode: PageNode) {
+        val allItemFragment = ActionListFragment.create(items, getKrScriptActionHandler(pageNode, false), null, ThemeModeState.getThemeMode())
+        supportFragmentManager.beginTransaction().replace(R.id.list_pages, allItemFragment).commitAllowingStateLoss()
+    }
+
+    private fun reloadMoreTab() {
+        Thread {
+            val page2Config = krScriptConfig.pageListConfig
+            val pages = getItems(page2Config)
+
+            pages?.run {
+                handler.post {
+                    updateMoreTab(this, page2Config)
+                }
+            }
+        }.start()
+    }
     private fun getKrScriptActionHandler(pageNode: PageNode, isFavoritesTab: Boolean): KrScriptActionHandler {
         return object : KrScriptActionHandler {
             override fun onActionCompleted(runnableNode: RunnableNode) {
@@ -201,7 +233,11 @@ class MainActivity : AppCompatActivity() {
                     finishAndRemoveTask()
                 } else if (runnableNode.reloadPage) {
                     // TODO:多线程优化
-                    //todo : reload of not
+                    if (isFavoritesTab) {
+                        reloadFavoritesTab()
+                    } else {
+                        reloadMoreTab()
+                    }
                 }
             }
 
