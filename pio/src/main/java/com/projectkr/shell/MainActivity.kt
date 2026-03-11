@@ -11,15 +11,11 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
@@ -29,7 +25,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -63,9 +58,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Favorites
 import top.yukonga.miuix.kmp.icon.extended.MapAlbum
 import top.yukonga.miuix.kmp.icon.extended.More
-import androidx.core.view.isVisible
-import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
-import top.yukonga.miuix.kmp.icon.extended.Layers
 
 enum class MainTab {
     Home, Favourites, Pages
@@ -77,7 +69,6 @@ class MainActivity : AppCompatActivity() {
     private val progressBarDialog = ProgressBarDialog(this)
     private var handler = Handler()
     private var krScriptConfig = KrScriptConfig()
-    private lateinit var binding: ActivityMainBinding
 
     private fun checkPermission(permission: String): Boolean = PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
 
@@ -235,7 +226,6 @@ class MainActivity : AppCompatActivity() {
         Thread {
             val page2Config = krScriptConfig.pageListConfig
             val pages = getItems(page2Config)
-
             pages?.run {
                 handler.post {
                     updateMoreTab(this, page2Config)
@@ -312,7 +302,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             return try {
                 val suffix = fileSelectedInterface.suffix()
-                if (suffix != null && suffix.isNotEmpty()) {
+                if (!suffix.isNullOrEmpty()) {
                     chooseFilePath(suffix)
                 } else {
                     val intent = Intent(Intent.ACTION_GET_CONTENT);
@@ -346,7 +336,7 @@ class MainActivity : AppCompatActivity() {
             }
             this.fileSelectedInterface = null
         } else if (requestCode == ACTION_FILE_PATH_CHOOSER_INNER) {
-            val absPath = if (data == null || resultCode != Activity.RESULT_OK) null else data.getStringExtra("file")
+            val absPath = if (data == null || resultCode != RESULT_OK) null else data.getStringExtra("file")
             fileSelectedInterface?.onFileSelected(absPath)
             this.fileSelectedInterface = null
         }
@@ -363,12 +353,6 @@ class MainActivity : AppCompatActivity() {
 
     fun _openPage(pageNode: PageNode) {
         OpenPageHelper(this).openPage(pageNode)
-    }
-
-    private fun getDensity(): Int {
-        val dm = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(dm)
-        return dm.densityDpi
     }
 
     fun onOptionsItemSelected(item: Int): Boolean {
