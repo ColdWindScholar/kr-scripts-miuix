@@ -125,8 +125,6 @@ public class KeepShell(private var rootMode: Boolean = true) {
         }
     }
 
-    private var br = "\n\n".toByteArray(Charset.defaultCharset())
-
     private val shellOutputCache = StringBuilder()
     private val startTag = "|SH>>|"
     private val endTag = "|<<SH|"
@@ -134,7 +132,7 @@ public class KeepShell(private var rootMode: Boolean = true) {
     private val endTagBytes = "\necho '$endTag'\n".toByteArray(Charset.defaultCharset())
 
     //执行脚本
-    fun doCmdSync(cmd: String): String {
+    fun doCmdSync(cmd: List<String>): String {
         println(cmd)
         if (mLock.isLocked && enterLockTime > 0 && System.currentTimeMillis() - enterLockTime > LOCK_TIMEOUT) {
             tryExit()
@@ -157,7 +155,7 @@ public class KeepShell(private var rootMode: Boolean = true) {
             }
 
             var unstart = true
-            while (true && reader != null) {
+            while (reader != null) {
                 val line = reader!!.readLine()
                 if (line == null) {
                     break
@@ -190,12 +188,12 @@ public class KeepShell(private var rootMode: Boolean = true) {
     }
 
     // 执行脚本，并对结果进行ResourceID翻译
-    public fun doCmdSync(shellCommand: String, shellTranslation: ShellTranslation): String {
+    fun doCmdSync(shellCommand: List<String>, shellTranslation: ShellTranslation): String {
         val rows = doCmdSync(shellCommand).split("\n")
-        if (rows.isNotEmpty()) {
-            return shellTranslation.resolveRows(rows)
+        return if (rows.isNotEmpty()) {
+            shellTranslation.resolveRows(rows)
         } else {
-            return ""
+            ""
         }
     }
 }

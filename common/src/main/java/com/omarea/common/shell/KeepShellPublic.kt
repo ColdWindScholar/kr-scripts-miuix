@@ -49,19 +49,9 @@ object KeepShellPublic {
         }
     }
 
-    fun doCmdSync(commands: List<String>): Boolean {
-        val stringBuilder = StringBuilder()
-
-        for (cmd in commands) {
-            stringBuilder.append(cmd)
-            stringBuilder.append("\n\n")
-        }
-
-        return doCmdSync(stringBuilder.toString()) != "error"
-    }
 
     //执行脚本
-    fun doCmdSync(cmd: String): String {
+    fun doCmdSync(cmd: List<String>): String {
         return getDefaultInstance().doCmdSync(cmd)
     }
 
