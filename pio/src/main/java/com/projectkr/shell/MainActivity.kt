@@ -27,12 +27,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.PermissionChecker
@@ -59,8 +62,14 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Favorites
 import top.yukonga.miuix.kmp.icon.extended.MapAlbum
 import top.yukonga.miuix.kmp.icon.extended.More
+import androidx.core.view.isVisible
+import top.yukonga.miuix.kmp.icon.extended.Layers
+
 enum class MainTab {
     Home, Favourites, Pages
+}
+enum class MenuItems {
+    Graph, Reboot, Info
 }
 class MainActivity : AppCompatActivity() {
     private val progressBarDialog = ProgressBarDialog(this)
@@ -107,7 +116,18 @@ class MainActivity : AppCompatActivity() {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = getString(R.string.app_name))
+                        title = getString(R.string.app_name),
+                        actions = {
+                            if (binding.mainTabhostCpu.isVisible){
+                            IconButton({}) { Icon(
+                                painter = painterResource(R.drawable.graph), null
+                            ) }}
+                            IconButton({})
+                            { Icon(painter = painterResource(R.drawable.power), null) }
+                            IconButton({})
+                            { Icon(painter = painterResource(R.drawable.info), null) }
+
+                        })
                 },
                 bottomBar = {
                     NavigationBar(
@@ -350,17 +370,9 @@ class MainActivity : AppCompatActivity() {
         return dm.densityDpi
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-
-        menu.findItem(R.id.action_graph).isVisible = (binding.mainTabhostCpu.visibility == View.VISIBLE)
-
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.option_menu_info -> {
+    fun onOptionsItemSelected(item: Int): Boolean {
+        when (MenuItems.entries[item]) {
+            MenuItems.Info -> {
                 val layoutInflater = LayoutInflater.from(this)
                 val layout = layoutInflater.inflate(R.layout.dialog_about, null)
                 val transparentUi = layout.findViewById<CompoundButton>(R.id.transparent_ui);
@@ -378,10 +390,10 @@ class MainActivity : AppCompatActivity() {
 
                 DialogHelper.customDialog(this, layout)
             }
-            R.id.option_menu_reboot -> {
+            MenuItems.Reboot -> {
                 DialogPower(this).showPowerMenu()
             }
-            R.id.action_graph -> {
+            MenuItems.Graph -> {
                 if (FloatMonitor.isShown == true) {
                     FloatMonitor(this).hidePopupWindow()
                     return false
@@ -412,6 +424,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 }
