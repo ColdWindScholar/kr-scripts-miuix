@@ -495,65 +495,85 @@ class MainActivity : AppCompatActivity() {
     @Composable
     fun DialogAbout(show: MutableState<Boolean>){
         val themeConfig = ThemeConfig(this)
-        SuperDialog(show = show.value, modifier = Modifier, title = getString(R.string.about_title), titleColor = DialogDefaults.titleColor(), summary = null, summaryColor = DialogDefaults.summaryColor(), backgroundColor = DialogDefaults.backgroundColor(), enableWindowDim = true, onDismissRequest = {show.value = false}, onDismissFinished = null, outsideMargin = DialogDefaults.outsideMargin, insideMargin = DialogDefaults.insideMargin, defaultWindowInsetsPadding = true, renderInRootScaffold = true, content = {
+        SuperDialog(
+            show = show.value,
+            modifier = Modifier,
+            title = getString(R.string.about_title),
+            titleColor = DialogDefaults.titleColor(),
+            summary = null,
+            summaryColor = DialogDefaults.summaryColor(),
+            backgroundColor = DialogDefaults.backgroundColor(),
+            enableWindowDim = true,
+            onDismissRequest = { show.value = false },
+            onDismissFinished = null,
+            outsideMargin = DialogDefaults.outsideMargin,
+            insideMargin = DialogDefaults.insideMargin,
+            defaultWindowInsetsPadding = true,
+            renderInRootScaffold = true,
+            content = {
+                Column {
+                    Text(
+                        text = stringResource(R.string.appliction_desc),
+                        color = colorResource(R.color.colorAccent),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Start,
+                        fontSize = 11.sp,
+                        style = MiuixTheme.textStyles.body1
+                    )
+                    Text(
+                        text = stringResource(R.string.appliction_name),
+                        fontSize = 36.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = MiuixTheme.textStyles.title2,
+                        color = Color(0xFF332200)
+                    )
+                    Text(
+                        text = stringResource(R.string.appliction_author),
+                        fontSize = 11.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = MiuixTheme.textStyles.subtitle,
+                    )
                     Column {
-                        Text(
-                            text = stringResource(R.string.appliction_desc),
-                            color = colorResource(R.color.colorAccent),
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Start,
-                            fontSize = 11.sp,
-                            style = MiuixTheme.textStyles.body1
-                        )
-                        Text(
-                            text = stringResource(R.string.appliction_name),
-                            fontSize = 36.sp,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MiuixTheme.textStyles.title2,
-                            color = Color(0xFF332200)
-                        )
-                        Text(
-                            text = stringResource(R.string.appliction_author),
-                            fontSize = 11.sp,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MiuixTheme.textStyles.subtitle,
-                        )
                         Column {
-                            Column {
-                                SuperSwitch(title = stringResource(R.string.transparent_ui),
-                                        titleColor = titleColor(Color(0xFF888888))
-                                    , checked = themeConfig.getAllowTransparentUI(),
-                                    onCheckedChange = {isChecked ->
-                                        if (isChecked && !checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                                            Toast.makeText(this@MainActivity, com.omarea.krscript.R.string.kr_write_external_storage, Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            themeConfig.setAllowTransparentUI(isChecked)
-                                        }
-                                    })
-                            }
-                            Column {
-                                Text(
-                                    text = stringResource(R.string.author_name),
-                                    fontSize = 11.sp,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textAlign = TextAlign.End,
-                                    style = MiuixTheme.textStyles.subtitle,
-                                    color = Color(0xffaaaaaa)
-                                )
-                                Text(
-                                    text = stringResource(R.string.engine_version_name),
-                                    fontSize = 11.sp,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textAlign = TextAlign.End,
-                                    style = MiuixTheme.textStyles.subtitle,
-                                    color = Color(0xffaaaaaa)
-                                )
-                            }
+                            SuperSwitch(
+                                title = stringResource(R.string.transparent_ui),
+                                titleColor = titleColor(Color(0xFF888888)),
+                                checked = themeConfig.getAllowTransparentUI(),
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked && !checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                        Toast.makeText(
+                                            this@MainActivity,
+                                            com.omarea.krscript.R.string.kr_write_external_storage,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        themeConfig.setAllowTransparentUI(isChecked)
+                                    }
+                                })
+                        }
+                        Column {
+                            Text(
+                                text = stringResource(R.string.author_name),
+                                fontSize = 11.sp,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.End,
+                                style = MiuixTheme.textStyles.subtitle,
+                                color = Color(0xffaaaaaa)
+                            )
+                            Text(
+                                text = stringResource(R.string.engine_version_name),
+                                fontSize = 11.sp,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.End,
+                                style = MiuixTheme.textStyles.subtitle,
+                                color = Color(0xffaaaaaa)
+                            )
                         }
                     }
-                })
+                }
+            })
     }
 
 
