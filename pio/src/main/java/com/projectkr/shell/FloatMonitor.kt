@@ -299,7 +299,7 @@ class FloatMonitor(context: Context) {
         gpuFreqText = view!!.findViewById(R.id.fw_gpu_freq)
         ramUseText = view!!.findViewById(R.id.fw_ram_use)
         temperatureText = view!!.findViewById(R.id.fw_battery_temp)
-        batteryLevelText = view!!.findViewById<TextView>(R.id.fw_battery_level)
+        batteryLevelText = view!!.findViewById(R.id.fw_battery_level)
 
         activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         return view!!

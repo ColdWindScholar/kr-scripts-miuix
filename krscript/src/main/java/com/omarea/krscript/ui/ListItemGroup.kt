@@ -6,7 +6,7 @@ import com.omarea.krscript.R
 import com.omarea.krscript.model.GroupNode
 
 class ListItemGroup(context: Context,
-                    final var isRootGroup: Boolean,
+                    var isRootGroup: Boolean,
                     config: GroupNode) :
         ListItemView(
                 context,
@@ -35,19 +35,11 @@ class ListItemGroup(context: Context,
         return false
     }
 
-    fun triggerActionByIndex(index: String): Boolean {
-        for (child in this.children) {
-            if (child is ListItemClickable && child.index.equals(index)) {
-                child.triggerAction()
-                return true
-            }
-        }
-        return false
-    }
+
 
     fun triggerUpdateByKey(keys: Array<String>) {
         for (key in keys) {
-            if (key.equals(this.key)) {
+            if (key == this.key) {
                 triggerUpdate()
             } else {
                 for (child in this.children) {
