@@ -89,9 +89,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 enum class MainTab {
     Favourites, Pages
 }
-enum class MenuItems {
-    Graph
-}
+
 @Composable
 fun PowerItem(
     title: String,

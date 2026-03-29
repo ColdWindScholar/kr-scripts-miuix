@@ -346,7 +346,7 @@ class ActionPage : AppCompatActivity() {
                         } else {
                             intent.type = "*/*"
                         }
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE)
                         startActivityForResult(intent, ACTION_FILE_PATH_CHOOSER)
                     }
                 }
