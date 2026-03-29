@@ -9,13 +9,14 @@
     android:keepScreenOn="false"
     tools:openDrawer="start">
 
-    <com.omarea.common.ui.OverScrollListView
+    <LinearLayout
         android:id="@+id/file_selector_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingTop="56dp">
 
-    </com.omarea.common.ui.OverScrollListView>
+    </LinearLayout>
 
     <include
         layout="@layout/app_bar_main"
