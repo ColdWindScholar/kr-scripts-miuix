@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDialogFragment
 import com.omarea.common.model.SelectItem
 import com.omarea.common.ui.DialogHelper
 import com.omarea.common.ui.DialogItemChooser
@@ -27,7 +28,7 @@ import com.omarea.krscript.model.*
 import com.omarea.krscript.shortcut.ActionShortcutManager
 import androidx.core.net.toUri
 
-class ActionListFragment : androidx.fragment.app.Fragment(), PageLayoutRender.OnItemClickListener {
+class ActionListFragment : AppCompatDialogFragment(), PageLayoutRender.OnItemClickListener {
     companion object {
         fun create(
                 actionInfos: ArrayList<NodeInfoBase>?,
