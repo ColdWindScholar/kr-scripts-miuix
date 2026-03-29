@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Settings
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -71,7 +70,6 @@ import com.omarea.krscript.model.PageNode
 import com.omarea.krscript.model.RunnableNode
 import com.omarea.krscript.ui.ActionListFragment
 import com.omarea.krscript.ui.ParamsFileChooserRender
-import com.omarea.vtools.FloatMonitor
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults.titleColor
 import top.yukonga.miuix.kmp.basic.NavigationBar
@@ -85,12 +83,11 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Favorites
-import top.yukonga.miuix.kmp.icon.extended.MapAlbum
 import top.yukonga.miuix.kmp.icon.extended.More
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 enum class MainTab {
-    Home, Favourites, Pages
+    Favourites, Pages
 }
 enum class MenuItems {
     Graph
@@ -171,9 +168,6 @@ class MainActivity : AppCompatActivity() {
                 progressBarDialog.hideDialog()
             }
             val items = listOf(
-                NavigationItem(
-                    label = getString(R.string.tab_home),
-                    icon = MiuixIcons.MapAlbum),
                 NavigationItem(label = getString(R.string.tab_favorites), icon = MiuixIcons.Favorites),
                 NavigationItem(label = getString(R.string.tab_pages), icon = MiuixIcons.More)
             )
@@ -195,9 +189,6 @@ class MainActivity : AppCompatActivity() {
                     TopAppBar(
                         title = getString(R.string.app_name),
                         actions = {
-                            IconButton({onOptionsItemSelected(MenuItems.Graph.ordinal)}) { Icon(
-                                painter = painterResource(R.drawable.graph), null
-                            ) }
                             IconButton({
                                 showPowerDialog.value = true
                             })
@@ -239,17 +230,7 @@ class MainActivity : AppCompatActivity() {
                             modifier = Modifier.fillMaxSize(),
                             factory = { context ->
                                 when (MainTab.entries[page]) {
-                                    MainTab.Home -> {
-                                        FrameLayout(context).apply {
-                                            id = View.generateViewId()
-                                        if (krScriptConfig.allowHomePage) {
-                                            val home = FragmentHome()
-                                            val fragmentManager = fragmentManager
-                                            val transaction = fragmentManager.beginTransaction()
-                                            transaction.replace(id, home)
-                                            transaction.commitAllowingStateLoss()
-                                        }}
-                                    }
+
 
                                     MainTab.Favourites -> {
                                         FrameLayout(context).apply {
@@ -580,39 +561,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onOptionsItemSelected(item: Int): Boolean {
-        when (MenuItems.entries[item]) {
-            MenuItems.Graph -> {
-                if (FloatMonitor.isShown == true) {
-                    FloatMonitor(this).hidePopupWindow()
-                    return false
-                }
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (Settings.canDrawOverlays(this)) {
-                        FloatMonitor(this).showPopupWindow()
-                        Toast.makeText(this, getString(R.string.float_monitor_tips), Toast.LENGTH_LONG).show()
-                    } else {
-                        //若没有权限，提示获取
-                        //val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                        //startActivity(intent);
-                        val intent = Intent()
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
-                        intent.data = Uri.fromParts("package", this.packageName, null)
 
-                        Toast.makeText(applicationContext, getString(R.string.permission_float), Toast.LENGTH_LONG).show()
-
-                        try {
-                            startActivity(intent)
-                        } catch (ex: Exception) {
-                        }
-                    }
-                } else {
-                    FloatMonitor(this).showPopupWindow()
-                    Toast.makeText(this, getString(R.string.float_monitor_tips), Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-        return true
-    }
 }
