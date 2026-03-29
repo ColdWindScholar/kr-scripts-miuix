@@ -1,5 +1,7 @@
 package com.projectkr.shell.utils;
 
+import static android.util.Log.println;
+
 import android.annotation.SuppressLint;
 
 import com.omarea.common.shell.KeepShellPublic;
@@ -47,6 +49,7 @@ public class CpuFrequencyUtils {
             }}
             return max;
         }  catch (IOException e) {
+            e.printStackTrace();
             return 0;
         }
     }
