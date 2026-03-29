@@ -73,8 +73,8 @@ import com.omarea.krscript.ui.ParamsFileChooserRender
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults.titleColor
 import top.yukonga.miuix.kmp.basic.NavigationBar
+import top.yukonga.miuix.kmp.basic.NavigationBarDisplayMode
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
-import top.yukonga.miuix.kmp.basic.NavigationDisplayMode
 import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Text
@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
                 },
                 bottomBar = {
                     NavigationBar(
-                        mode = NavigationDisplayMode.IconAndText,
+                        mode = NavigationBarDisplayMode.IconAndText,
                         content = {
                             items.forEachIndexed { index, item ->
                                 NavigationBarItem(
