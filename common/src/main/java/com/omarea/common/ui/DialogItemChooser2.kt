@@ -52,7 +52,7 @@ class DialogItemChooser2(
                     }
 
                     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        (absListView.adapter as Filterable).getFilter().filter(if (s == null) "" else s.toString())
+                        (absListView.adapter as Filterable).filter.filter(if (s == null) "" else s.toString())
                     }
                 })
             }

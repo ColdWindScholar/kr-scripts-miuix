@@ -16,12 +16,10 @@ object RootFile {
         return KeepShellPublic.doCmdSync(listOf("if [[ -f \"$path\" ]]; then echo 1; fi;")) == "1"
     }
 
-    fun fileNotEmpty(path: String): Boolean {
-        return KeepShellPublic.doCmdSync(listOf("if [[ -f \"$path\" ]] && [[ -s \"$path\" ]]; then echo 1; fi;")) == "1"
-    }
+
 
     fun dirExists(path: String): Boolean {
-        return KeepShellPublic.doCmdSync(listOf("if [[ -d \"$path\" ]]; then echo 1; fi;")).equals("1")
+        return KeepShellPublic.doCmdSync(listOf("if [[ -d \"$path\" ]]; then echo 1; fi;")) == "1"
     }
 
     // 处理像 "drwxrwx--x   3 root     root         4096 1970-07-14 17:13 vendor_de/" 这样的数据行

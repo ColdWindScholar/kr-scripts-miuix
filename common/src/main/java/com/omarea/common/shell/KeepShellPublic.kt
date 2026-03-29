@@ -4,39 +4,6 @@ package com.omarea.common.shell
  * Created by Hello on 2018/01/23.
  */
 object KeepShellPublic {
-    private val keepShells = HashMap<String, KeepShell>()
-
-    fun getInstance(key: String, rootMode: Boolean): KeepShell {
-        synchronized(keepShells) {
-            if (!keepShells.containsKey(key)) {
-                keepShells[key] = KeepShell(rootMode)
-            }
-            return keepShells[key]!!
-        }
-    }
-
-    fun destroyInstance(key: String) {
-        synchronized(keepShells) {
-            if (!keepShells.containsKey(key)) {
-                return
-            } else {
-                val keepShell = keepShells[key]!!
-                keepShells.remove(key)
-                keepShell.tryExit()
-            }
-        }
-    }
-
-    fun destroyAll() {
-        synchronized(keepShells) {
-            while (keepShells.isNotEmpty()) {
-                val key = keepShells.keys.first()
-                val keepShell = keepShells[key]!!
-                keepShells.remove(key)
-                keepShell.tryExit()
-            }
-        }
-    }
 
     val defaultKeepShell = KeepShell()
     val secondaryKeepShell = KeepShell()
