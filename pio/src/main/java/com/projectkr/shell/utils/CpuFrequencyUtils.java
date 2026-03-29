@@ -5,7 +5,12 @@ import android.annotation.SuppressLint;
 import com.omarea.common.shell.KeepShellPublic;
 import com.omarea.common.shell.KernelProrp;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -21,21 +26,29 @@ public class CpuFrequencyUtils {
     }
 
     public static int getCurrentFrequency() {
-        String freqs = KeepShellPublic.INSTANCE.doCmdSync(Collections.singletonList("cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq"));
-        int max = 0;
-        if (!freqs.equals("error")) {
-            String[] freqArr = freqs.split("\n");
-            for (String aFreqArr : freqArr) {
-                try {
-                    int freq = Integer.parseInt(aFreqArr);
-                    if (freq > max) {
-                        max = freq;
+        File freqs_file = new File("/sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq");
+        try{
+        FileInputStream inputStream = new FileInputStream(freqs_file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            int max = 0;
+            String line;
+            while ( (line = br.readLine())!=null ){
+            if (!line.equals("error")) {
+                String[] freqArr = line.split("\n");
+                for (String aFreqArr : freqArr) {
+                    try {
+                        int freq = Integer.parseInt(aFreqArr);
+                        if (freq > max) {
+                            max = freq;
+                        }
+                    } catch (Exception ignored) {
                     }
-                } catch (Exception ignored) {
                 }
-            }
+            }}
+            return max;
+        }  catch (IOException e) {
+            return 0;
         }
-        return max;
     }
 
     public static String getCurrentMinFrequency(String core) {
