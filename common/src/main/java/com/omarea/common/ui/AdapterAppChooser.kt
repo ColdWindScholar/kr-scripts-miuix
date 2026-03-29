@@ -63,7 +63,7 @@ class AdapterAppChooser(
         }
 
         override fun performFiltering(constraint: CharSequence?): FilterResults {
-            val results = Filter.FilterResults()
+            val results = FilterResults()
             val prefix: String = if (constraint == null) "" else constraint.toString()
 
             if (prefix.isEmpty()) {
@@ -168,19 +168,7 @@ class AdapterAppChooser(
         return convertView
     }
 
-    fun updateRow(position: Int, listView: OverScrollGridView, AppInfo: AppInfo) {
-        try {
-            val visibleFirstPosi = listView.firstVisiblePosition
-            val visibleLastPosi = listView.lastVisiblePosition
 
-            if (position >= visibleFirstPosi && position <= visibleLastPosi) {
-                filterApps[position] = AppInfo
-                val view = listView.getChildAt(position - visibleFirstPosi)
-                updateRow(position, view)
-            }
-        } catch (ex: Exception) {
-        }
-    }
 
     fun updateRow(position: Int, convertView: View) {
         val item = getItem(position)

@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.AbsListView
 import android.widget.CompoundButton
@@ -88,21 +87,7 @@ class DialogAppChooser(
         fun onConfirm(apps: List<AdapterAppChooser.AppInfo>)
     }
 
-    public fun setExcludeApps(apps: Array<String>): DialogAppChooser {
-        this.excludeApps = apps
-        if (this.view != null) {
-            Log.e("@DialogAppChooser", "Unable to set the exclusion list, The list has been loaded")
-        }
 
-        return this
-    }
-
-    public fun setAllowAllSelect(allow: Boolean): DialogAppChooser {
-        this.allowAllSelect = allow
-        view?.findViewById<CompoundButton?>(R.id.select_all)?.visibility = if (allow) View.VISIBLE else View.GONE
-
-        return this
-    }
 
     private fun onConfirm(gridView: AbsListView) {
         val apps = (gridView.adapter as AdapterAppChooser).getSelectedItems()
