@@ -10,9 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -55,8 +53,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -65,7 +61,6 @@ import androidx.core.content.PermissionChecker
 import androidx.fragment.app.FragmentActivity
 import com.omarea.common.shared.FilePathResolver
 import com.omarea.common.shell.KeepShellPublic
-import com.omarea.common.ui.DialogHelper
 import com.omarea.common.ui.ProgressBarDialog
 import com.omarea.krscript.config.PageConfigReader
 import com.omarea.krscript.config.PageConfigSh
@@ -78,7 +73,6 @@ import com.omarea.krscript.ui.ActionListFragment
 import com.omarea.krscript.ui.ParamsFileChooserRender
 import com.omarea.vtools.FloatMonitor
 import kotlinx.coroutines.launch
-import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults.titleColor
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
@@ -192,7 +186,7 @@ class MainActivity : AppCompatActivity() {
             // 同步 pager 状态到当前页面索引
             val currentPage by remember { derivedStateOf { pagerState.currentPage } }
             if (!(checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE) && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 111);
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 111)
             }
             val showPowerDialog = remember { mutableStateOf(false) }
             val showAboutDialog = remember { mutableStateOf(false) }
