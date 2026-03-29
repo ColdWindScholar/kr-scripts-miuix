@@ -39,6 +39,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,8 +50,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -72,6 +78,8 @@ import com.omarea.krscript.ui.ActionListFragment
 import com.omarea.krscript.ui.ParamsFileChooserRender
 import com.omarea.vtools.FloatMonitor
 import kotlinx.coroutines.launch
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults.titleColor
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import top.yukonga.miuix.kmp.basic.NavigationDisplayMode
@@ -80,16 +88,18 @@ import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperDialog
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Favorites
 import top.yukonga.miuix.kmp.icon.extended.MapAlbum
 import top.yukonga.miuix.kmp.icon.extended.More
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 enum class MainTab {
     Home, Favourites, Pages
 }
 enum class MenuItems {
-    Graph, Info
+    Graph
 }
 @Composable
 fun PowerItem(
@@ -185,6 +195,7 @@ class MainActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 111);
             }
             val showPowerDialog = remember { mutableStateOf(false) }
+            val showAboutDialog = remember { mutableStateOf(false) }
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -197,7 +208,7 @@ class MainActivity : AppCompatActivity() {
                                 showPowerDialog.value = true
                             })
                             { Icon(painter = painterResource(R.drawable.power), null) }
-                            IconButton({onOptionsItemSelected(MenuItems.Info.ordinal)})
+                            IconButton({showAboutDialog.value = true })
                             { Icon(painter = painterResource(R.drawable.info), null) }
 
                         })
@@ -266,6 +277,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+            DialogAbout(showAboutDialog)
             SuperDialog(
                 showPowerDialog,
                 onDismissRequest = {
@@ -453,7 +465,7 @@ class MainActivity : AppCompatActivity() {
     private fun chooseFilePath(fileSelectedInterface: ParamsFileChooserRender.FileSelectedInterface): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, getString(com.omarea.krscript.R.string.kr_write_external_storage), Toast.LENGTH_LONG).show()
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 2);
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 2)
             return false
         } else {
             return try {
@@ -461,7 +473,7 @@ class MainActivity : AppCompatActivity() {
                 if (!suffix.isNullOrEmpty()) {
                     chooseFilePath(suffix)
                 } else {
-                    val intent = Intent(Intent.ACTION_GET_CONTENT);
+                    val intent = Intent(Intent.ACTION_GET_CONTENT)
                     val mimeType = fileSelectedInterface.mimeType()
                     if (mimeType != null) {
                         intent.type = mimeType
@@ -510,27 +522,72 @@ class MainActivity : AppCompatActivity() {
     fun _openPage(pageNode: PageNode) {
         OpenPageHelper(this).openPage(pageNode)
     }
+    @Composable
+    fun DialogAbout(show: MutableState<Boolean>){
+        val themeConfig = ThemeConfig(this)
+        SuperDialog(show, title=getString(R.string.about_title), onDismissRequest = {show.value = false}) {
+            Column {
+                Text(
+                    text = stringResource(R.string.appliction_desc),
+                    color = colorResource(R.color.colorAccent),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    fontSize = 11.sp,
+                    style = MiuixTheme.textStyles.body1
+                )
+                Text(
+                    text = stringResource(R.string.appliction_name),
+                    fontSize = 36.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = MiuixTheme.textStyles.title2,
+                    color = Color(0xFF332200)
+                )
+                Text(
+                    text = stringResource(R.string.appliction_author),
+                    fontSize = 11.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = MiuixTheme.textStyles.subtitle,
+                )
+                Row {
+                    Column {
+                        SuperSwitch(title = stringResource(R.string.transparent_ui),
+                                titleColor = titleColor(Color(0xFF888888))
+                            , checked = themeConfig.getAllowTransparentUI(),
+                            onCheckedChange = {isChecked ->
+                                if (isChecked && !checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                    Toast.makeText(this@MainActivity, com.omarea.krscript.R.string.kr_write_external_storage, Toast.LENGTH_SHORT).show()
+                                } else {
+                                    themeConfig.setAllowTransparentUI(isChecked)
+                                }
+                            })
+                    }
+                    Column {
+                        Text(
+                            text = stringResource(R.string.author_name),
+                            fontSize = 11.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.End,
+                            style = MiuixTheme.textStyles.subtitle,
+                            color = Color(0xffaaaaaa)
+                        )
+                        Text(
+                            text = stringResource(R.string.engine_version_name),
+                            fontSize = 11.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.End,
+                            style = MiuixTheme.textStyles.subtitle,
+                            color = Color(0xffaaaaaa)
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     fun onOptionsItemSelected(item: Int): Boolean {
         when (MenuItems.entries[item]) {
-            MenuItems.Info -> {
-                val layoutInflater = LayoutInflater.from(this)
-                val layout = layoutInflater.inflate(R.layout.dialog_about, null)
-                val transparentUi = layout.findViewById<CompoundButton>(R.id.transparent_ui);
-                val themeConfig = ThemeConfig(this)
-                transparentUi.setOnClickListener {
-                    val isChecked = (it as CompoundButton).isChecked
-                    if (isChecked && !checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        it.isChecked = false
-                        Toast.makeText(this@MainActivity, com.omarea.krscript.R.string.kr_write_external_storage, Toast.LENGTH_SHORT).show()
-                    } else {
-                        themeConfig.setAllowTransparentUI(isChecked)
-                    }
-                }
-                transparentUi.isChecked = themeConfig.getAllowTransparentUI()
-
-                DialogHelper.customDialog(this, layout)
-            }
             MenuItems.Graph -> {
                 if (FloatMonitor.isShown == true) {
                     FloatMonitor(this).hidePopupWindow()
