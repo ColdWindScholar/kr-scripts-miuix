@@ -550,7 +550,7 @@ class MainActivity : AppCompatActivity() {
                     textAlign = TextAlign.Center,
                     style = MiuixTheme.textStyles.subtitle,
                 )
-                Row {
+                Column {
                     Column {
                         SuperSwitch(title = stringResource(R.string.transparent_ui),
                                 titleColor = titleColor(Color(0xFF888888))
