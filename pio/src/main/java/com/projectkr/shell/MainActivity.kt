@@ -79,6 +79,7 @@ import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.extra.DialogDefaults
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
@@ -251,82 +252,78 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             DialogAbout(showAboutDialog)
-            SuperDialog(
-                showPowerDialog,
-                onDismissRequest = {
-                    showPowerDialog.value = false
-                },
-                title = "选择操作"
-            ) {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 8.dp, vertical = 16.dp)
-                        .alpha(0.85f),
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        PowerItem(
-                            modifier = Modifier.weight(1f),
-                            title = "关机",
-                            desc = "正常关机",
-                            iconRes = R.drawable.power_shutdown,
-                            iconBgColor = Color(0xFF4BA5FF)
-                        ) {
-                            showPowerDialog.value = false
-                            KeepShellPublic.doCmdSync(listOf(getString(R.string.power_shutdown_cmd)))
-                        }
+            SuperDialog(show = showPowerDialog.value, modifier = Modifier, title = "选择操作", titleColor = DialogDefaults.titleColor(), summary = null, summaryColor = DialogDefaults.summaryColor(), backgroundColor = DialogDefaults.backgroundColor(), enableWindowDim = true, onDismissRequest = {
+                                showPowerDialog.value = false
+                            }, onDismissFinished = null, outsideMargin = DialogDefaults.outsideMargin, insideMargin = DialogDefaults.insideMargin, defaultWindowInsetsPadding = true, renderInRootScaffold = true, content = {
+                            Column(
+                                modifier = Modifier
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(horizontal = 8.dp, vertical = 16.dp)
+                                    .alpha(0.85f),
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    PowerItem(
+                                        modifier = Modifier.weight(1f),
+                                        title = "关机",
+                                        desc = "正常关机",
+                                        iconRes = R.drawable.power_shutdown,
+                                        iconBgColor = Color(0xFF4BA5FF)
+                                    ) {
+                                        showPowerDialog.value = false
+                                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_shutdown_cmd)))
+                                    }
 
-                        PowerItem(
-                            modifier = Modifier.weight(1f),
-                            title = "重启",
-                            desc = "正常重启",
-                            iconRes = R.drawable.power_reboot,
-                            iconBgColor = Color(0xFF8BC34A)
-                        ) { showPowerDialog.value = false
-                            KeepShellPublic.doCmdSync(listOf(getString(R.string.power_reboot_cmd)))
-                        }
-                    }
+                                    PowerItem(
+                                        modifier = Modifier.weight(1f),
+                                        title = "重启",
+                                        desc = "正常重启",
+                                        iconRes = R.drawable.power_reboot,
+                                        iconBgColor = Color(0xFF8BC34A)
+                                    ) { showPowerDialog.value = false
+                                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_reboot_cmd)))
+                                    }
+                                }
 
-                    PowerItem(
-                        title = "热重启",
-                        desc = "只重启系统界面而不重新引导系统（可能引发Bug）",
-                        iconRes = R.drawable.power_hot_reboot,
-                        iconBgColor = Color(0xFF00BCD4)
-                    ) {
-                        showPowerDialog.value = false
-                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_hot_reboot_cmd)))
-                    }
+                                PowerItem(
+                                    title = "热重启",
+                                    desc = "只重启系统界面而不重新引导系统（可能引发Bug）",
+                                    iconRes = R.drawable.power_hot_reboot,
+                                    iconBgColor = Color(0xFF00BCD4)
+                                ) {
+                                    showPowerDialog.value = false
+                                    KeepShellPublic.doCmdSync(listOf(getString(R.string.power_hot_reboot_cmd)))
+                                }
 
-                    PowerItem(
-                        title = "Recovery",
-                        desc = "重启到Recovery模式（俗称卡刷模式）",
-                        iconRes = R.drawable.power_recovery,
-                        iconBgColor = Color(0XC8787878)
-                    ) { showPowerDialog.value = false
-                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_recovery_cmd)))
-                    }
+                                PowerItem(
+                                    title = "Recovery",
+                                    desc = "重启到Recovery模式（俗称卡刷模式）",
+                                    iconRes = R.drawable.power_recovery,
+                                    iconBgColor = Color(0XC8787878)
+                                ) { showPowerDialog.value = false
+                                    KeepShellPublic.doCmdSync(listOf(getString(R.string.power_recovery_cmd)))
+                                }
 
-                    PowerItem(
-                        title = "Fastboot",
-                        desc = "重启到引导模式（俗称线刷模式）",
-                        iconRes = R.drawable.power_fastboot,
-                        iconBgColor = Color(0XC8787878)
-                    ) { showPowerDialog.value = false
-                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_fastboot_cmd)))
-                    }
-                    PowerItem(
-                        title = "9008(EDL)",
-                        desc = "重启到9008模式，*此模式仅限部分骁龙设备可用",
-                        iconRes = R.drawable.power_emergency,
-                        iconBgColor = Color(0XC8787878)
-                    ) { showPowerDialog.value = false
-                        KeepShellPublic.doCmdSync(listOf(getString(R.string.power_emergency_cmd)))
-                    }
-                }
-            }
+                                PowerItem(
+                                    title = "Fastboot",
+                                    desc = "重启到引导模式（俗称线刷模式）",
+                                    iconRes = R.drawable.power_fastboot,
+                                    iconBgColor = Color(0XC8787878)
+                                ) { showPowerDialog.value = false
+                                    KeepShellPublic.doCmdSync(listOf(getString(R.string.power_fastboot_cmd)))
+                                }
+                                PowerItem(
+                                    title = "9008(EDL)",
+                                    desc = "重启到9008模式，*此模式仅限部分骁龙设备可用",
+                                    iconRes = R.drawable.power_emergency,
+                                    iconBgColor = Color(0XC8787878)
+                                ) { showPowerDialog.value = false
+                                    KeepShellPublic.doCmdSync(listOf(getString(R.string.power_emergency_cmd)))
+                                }
+                            }
+                        })
         }
     }
 
@@ -498,65 +495,65 @@ class MainActivity : AppCompatActivity() {
     @Composable
     fun DialogAbout(show: MutableState<Boolean>){
         val themeConfig = ThemeConfig(this)
-        SuperDialog(show, title=getString(R.string.about_title), onDismissRequest = {show.value = false}) {
-            Column {
-                Text(
-                    text = stringResource(R.string.appliction_desc),
-                    color = colorResource(R.color.colorAccent),
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Start,
-                    fontSize = 11.sp,
-                    style = MiuixTheme.textStyles.body1
-                )
-                Text(
-                    text = stringResource(R.string.appliction_name),
-                    fontSize = 36.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = MiuixTheme.textStyles.title2,
-                    color = Color(0xFF332200)
-                )
-                Text(
-                    text = stringResource(R.string.appliction_author),
-                    fontSize = 11.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = MiuixTheme.textStyles.subtitle,
-                )
-                Column {
-                    Column {
-                        SuperSwitch(title = stringResource(R.string.transparent_ui),
-                                titleColor = titleColor(Color(0xFF888888))
-                            , checked = themeConfig.getAllowTransparentUI(),
-                            onCheckedChange = {isChecked ->
-                                if (isChecked && !checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                                    Toast.makeText(this@MainActivity, com.omarea.krscript.R.string.kr_write_external_storage, Toast.LENGTH_SHORT).show()
-                                } else {
-                                    themeConfig.setAllowTransparentUI(isChecked)
-                                }
-                            })
-                    }
+        SuperDialog(show = show.value, modifier = Modifier, title = getString(R.string.about_title), titleColor = DialogDefaults.titleColor(), summary = null, summaryColor = DialogDefaults.summaryColor(), backgroundColor = DialogDefaults.backgroundColor(), enableWindowDim = true, onDismissRequest = {show.value = false}, onDismissFinished = null, outsideMargin = DialogDefaults.outsideMargin, insideMargin = DialogDefaults.insideMargin, defaultWindowInsetsPadding = true, renderInRootScaffold = true, content = {
                     Column {
                         Text(
-                            text = stringResource(R.string.author_name),
-                            fontSize = 11.sp,
+                            text = stringResource(R.string.appliction_desc),
+                            color = colorResource(R.color.colorAccent),
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.End,
-                            style = MiuixTheme.textStyles.subtitle,
-                            color = Color(0xffaaaaaa)
+                            textAlign = TextAlign.Start,
+                            fontSize = 11.sp,
+                            style = MiuixTheme.textStyles.body1
                         )
                         Text(
-                            text = stringResource(R.string.engine_version_name),
+                            text = stringResource(R.string.appliction_name),
+                            fontSize = 36.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            style = MiuixTheme.textStyles.title2,
+                            color = Color(0xFF332200)
+                        )
+                        Text(
+                            text = stringResource(R.string.appliction_author),
                             fontSize = 11.sp,
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.End,
+                            textAlign = TextAlign.Center,
                             style = MiuixTheme.textStyles.subtitle,
-                            color = Color(0xffaaaaaa)
                         )
+                        Column {
+                            Column {
+                                SuperSwitch(title = stringResource(R.string.transparent_ui),
+                                        titleColor = titleColor(Color(0xFF888888))
+                                    , checked = themeConfig.getAllowTransparentUI(),
+                                    onCheckedChange = {isChecked ->
+                                        if (isChecked && !checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                            Toast.makeText(this@MainActivity, com.omarea.krscript.R.string.kr_write_external_storage, Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            themeConfig.setAllowTransparentUI(isChecked)
+                                        }
+                                    })
+                            }
+                            Column {
+                                Text(
+                                    text = stringResource(R.string.author_name),
+                                    fontSize = 11.sp,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.End,
+                                    style = MiuixTheme.textStyles.subtitle,
+                                    color = Color(0xffaaaaaa)
+                                )
+                                Text(
+                                    text = stringResource(R.string.engine_version_name),
+                                    fontSize = 11.sp,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.End,
+                                    style = MiuixTheme.textStyles.subtitle,
+                                    color = Color(0xffaaaaaa)
+                                )
+                            }
+                        }
                     }
-                }
-            }
-        }
+                })
     }
 
 
