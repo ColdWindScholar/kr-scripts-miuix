@@ -8,9 +8,6 @@ public class ShellExecutor {
     private static String extraEnvPath = "";
     private static String defaultEnvPath = ""; // /sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
 
-    public static void setExtraEnvPath(String extraEnvPath) {
-        ShellExecutor.extraEnvPath = extraEnvPath;
-    }
 
     private static String getEnvPath() {
         // FIXME:非root模式下，默认的 TMPDIR=/data/local/tmp 变量可能会导致某些需要写缓存的场景（例如使用source指令）脚本执行失败！
