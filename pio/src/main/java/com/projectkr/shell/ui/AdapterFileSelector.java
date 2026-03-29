@@ -13,7 +13,6 @@ import com.omarea.common.ui.ProgressBarDialog;
 import com.projectkr.shell.R;
 
 import java.io.File;
-import java.io.FileFilter;
 
 public class AdapterFileSelector extends BaseAdapter {
     private File[] fileArray;
@@ -60,51 +59,45 @@ public class AdapterFileSelector extends BaseAdapter {
 
     private void loadDir(final File dir) {
         progressBarDialog.showDialog("加载中...");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File parent = dir.getParentFile();
-                if (parent != null) {
-                    String parentPath = parent.getAbsolutePath();
-                    hasParent = parent.exists() && parent.canRead() && (leaveRootDir || !(rootDir.startsWith(parentPath) && rootDir.length() > parentPath.length()));
-                } else {
-                    hasParent = false;
-                }
+        new Thread(() -> {
+            File parent = dir.getParentFile();
+            if (parent != null) {
+                String parentPath = parent.getAbsolutePath();
+                hasParent = parent.exists() && parent.canRead() && (leaveRootDir || !(rootDir.startsWith(parentPath) && rootDir.length() > parentPath.length()));
+            } else {
+                hasParent = false;
+            }
 
-                if (dir.exists() && dir.canRead()) {
-                    File[] files = dir.listFiles(new FileFilter() {
-                        @Override
-                        public boolean accept(File fileItem) {
-                            if (folderChooserMode) {
-                                return fileItem.isDirectory();
-                            } else {
-                                return fileItem.exists() && (!fileItem.isFile() || extension == null || extension.isEmpty() || fileItem.getName().endsWith(extension));
-                            }
-                        }
-                    });
+            if (dir.exists() && dir.canRead()) {
+                File[] files = dir.listFiles(fileItem -> {
+                    if (folderChooserMode) {
+                        return fileItem.isDirectory();
+                    } else {
+                        return fileItem.exists() && (!fileItem.isFile() || extension == null || extension.isEmpty() || fileItem.getName().endsWith(extension));
+                    }
+                });
 
-                    // 文件排序
-                    for (int i = 0; i < files.length; i++) {
-                        for (int j = i + 1; j < files.length; j++) {
-                            if ((files[j].isDirectory() && files[i].isFile())) {
-                                File t = files[i];
-                                files[i] = files[j];
-                                files[j] = t;
-                            } else if (files[j].isDirectory() == files[i].isDirectory() && (files[j].getName().toLowerCase().compareTo(files[i].getName().toLowerCase()) < 0)) {
-                                File t = files[i];
-                                files[i] = files[j];
-                                files[j] = t;
-                            }
+                // 文件排序
+                for (int i = 0; i < files.length; i++) {
+                    for (int j = i + 1; j < files.length; j++) {
+                        if ((files[j].isDirectory() && files[i].isFile())) {
+                            File t = files[i];
+                            files[i] = files[j];
+                            files[j] = t;
+                        } else if (files[j].isDirectory() == files[i].isDirectory() && (files[j].getName().toLowerCase().compareTo(files[i].getName().toLowerCase()) < 0)) {
+                            File t = files[i];
+                            files[i] = files[j];
+                            files[j] = t;
                         }
                     }
-                    fileArray = files;
                 }
-                currentDir = dir;
-                handler.post(() -> {
-                    notifyDataSetChanged();
-                    progressBarDialog.hideDialog();
-                });
+                fileArray = files;
             }
+            currentDir = dir;
+            handler.post(() -> {
+                notifyDataSetChanged();
+                progressBarDialog.hideDialog();
+            });
         }).start();
     }
 

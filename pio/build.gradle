@@ -46,6 +46,7 @@ dependencies {
     implementation project(':common') // 添加依赖模块
     implementation project(':krscript') // 添加依赖模块
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
     def composeBom = platform('androidx.compose:compose-bom:2026.02.01')
     implementation composeBom
     androidTestImplementation composeBom

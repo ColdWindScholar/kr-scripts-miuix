@@ -1,7 +1,6 @@
 package com.projectkr.shell
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -125,7 +124,6 @@ class ActivityFileSelector : AppCompatActivity() {
                 } else {
                     AdapterFileSelector.FileChooser(sdcard, onSelected, ProgressBarDialog(this), extension)
                 }
-
                 binding.fileSelectorList.adapter = adapterFileSelector
             }
         } else {
